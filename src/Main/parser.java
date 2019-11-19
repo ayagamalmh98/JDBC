@@ -24,7 +24,7 @@ public class parser {
 
 		}
 		if (a[0].toUpperCase().equals("INSERT") ){
-			// insert(query);
+			 insert(query);
 
 		}
 		if (a[0].toUpperCase().equals("SELECT") ){
@@ -41,6 +41,27 @@ public class parser {
 
 		}
 
+	}
+
+	private void insert(String query) {
+		Pattern pattern1 = Pattern.compile("(?i)insert\\s(?i)into\\s\\w+\\s(?i)values\\s?[(](\\s?\\w+\\s?,)+(\\s?\\w+\\s?)[)]");
+		Pattern pattern2 = Pattern.compile("(?i)insert\\s(?i)into\\s\\w+\\s?[(](\\s?\\w+\\s,)+(\\s?\\w+\\s)[)]\\s?(?i)values\\s?[(](\\s?\\w+\\s?,)+(\\s?\\w+\\s?)[)]");
+
+		Matcher matcher1 = pattern1.matcher(query);
+		Matcher matcher2 = pattern2.matcher(query);
+
+		if (matcher1.find()) {
+
+			
+
+		} else if (matcher2.find()) {
+ 
+			
+		}
+		else System.out.println("not valid query ");
+		return;
+		
+		
 	}
 
 	private void drop(String query) {
