@@ -10,7 +10,7 @@ public class SQL {
 	File Directory;
 
 	public SQL() {
-		Directory = new File("/Users/DELL/eclipse-workspace/DBMS");
+		Directory = new File("/Users/DELL/eclipse-workspace/DBMS/Directory");
 		Directory.mkdirs();
 	}
 

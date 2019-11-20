@@ -10,7 +10,11 @@ public class DatabaseImp implements Database {
 	private ArrayList<File> database;
 	private SQL sql;
 
-	private DatabaseImp() {}
+	private DatabaseImp() {
+		this.database = new ArrayList<>();
+		this.sql = new SQL();
+
+	}
 
 	public static DatabaseImp getInstance() {
 		if (Instance == null) {
@@ -24,20 +28,20 @@ public class DatabaseImp implements Database {
 		databaseName = databaseName.toLowerCase();
 		String query = "";
 		if (dropIfExists) {
-			query = "Drop Database" + databaseName;
+			query = "Drop Database " + databaseName;
 			try {
 				executeStructureQuery(query);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			query = "Create Database" + databaseName;
+			query = "Create Database " + databaseName;
 			try {
 				executeStructureQuery(query);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		} else {
-			query = "Create Database" + databaseName;
+			query = "Create Database " + databaseName;
 			try {
 				executeStructureQuery(query);
 			} catch (SQLException e) {
@@ -47,26 +51,25 @@ public class DatabaseImp implements Database {
 		return databaseName;
 	}
 
-	
 	@Override
 	public boolean executeStructureQuery(String query) throws SQLException {
 		String[] splitted = query.replaceAll("\\)", " ").replaceAll("\\(", " ").replaceAll("'", "")
-				.replaceAll("\\s+\\,", ",").split("\\s+|\\,\\s*|\\(|\\)|\\=");	
+				.replaceAll("\\s+\\,", ",").split("\\s+|\\,\\s*|\\(|\\)|\\=");
 		String databaseName = splitted[2].toLowerCase();
 		if (splitted[1].equalsIgnoreCase("database")) {
 			if (splitted[0].equalsIgnoreCase("create")) {
-				if(sql.databaseExists(databaseName)) {
+				if (sql.databaseExists(databaseName)) {
 					int index = Index(databaseName);
-					if(index != -1){
+					if (index != -1) {
 						database.remove(index);
 					}
 				}
 				File data = sql.createDatabase(databaseName);
 				database.add(data);
 			} else if (splitted[0].equalsIgnoreCase("drop")) {
-				if(sql.databaseExists(databaseName)) {
+				if (sql.databaseExists(databaseName)) {
 					int index = Index(databaseName);
-					if(index != -1){
+					if (index != -1) {
 						database.remove(index);
 					}
 				}
@@ -79,23 +82,21 @@ public class DatabaseImp implements Database {
 
 			}
 		}
-		return false;
+		return true;
 	}
-	
+
 	private int Index(String databaseName) {
 		int i = -1;
-		for(File flag : database ) {
+		for (File flag : database) {
 			i++;
-			if(flag.getName().equalsIgnoreCase(databaseName)) {
+			if (flag.getName().equalsIgnoreCase(databaseName)) {
 				return i;
 			}
-			
+
 		}
 		return -1;
 	}
-	
 
-	
 	@Override
 	public Object[][] executeQuery(String query) throws SQLException {
 
