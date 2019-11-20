@@ -1,36 +1,30 @@
-package Main;
+package eg.edu.alexu.csd.oop.db;
 
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class main {
-	static Scanner input = new Scanner(System.in);
-	
 
+	static Scanner input = new Scanner(System.in);
 
 	public static void main(String[] args) throws Exception {
-		
 		while (true) {
-			start();
-		
+			//start();
+			Database imp = DatabaseImp.getInstance();
+			SQL sql = new SQL();
+			//imp.createDatabase("klam", sql.databaseExists("klam"));
+			imp.executeStructureQuery("Drop Database klam");
+			
+
 		}
 
 	}
 
-
-
-	
-
-
-
-	private static void start() throws SQLException {
+	private static void start() {
 		System.out.println("Enter sql query");
 		System.out.print(">> ");
 		String query = input.nextLine();
-		Parser p=new Parser();
-		
+		parser p = new parser();
 		p.parse(query);
-		
-	}
 
+	}
 }

@@ -1,5 +1,4 @@
-package Main;
-
+package eg.edu.alexu.csd.oop.db;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +10,7 @@ public class SQL {
 	File Directory;
 
 	public SQL() {
-		Directory = new File("/Users/EGYPT_LAPTOP/eclipse-workspace/DPMS/Directory");
+		Directory = new File("/Users/DELL/eclipse-workspace/DBMS/Directory");
 		Directory.mkdirs();
 	}
 
@@ -47,26 +46,12 @@ public class SQL {
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
-	public void createTable(String tableName, String databaseName) {
-		File tableXML = new File(
-				Directory.getAbsolutePath() + File.separator + databaseName + File.separator + tableName + ".xml");
-		File tableDTD = new File(
-				Directory.getAbsolutePath() + File.separator + databaseName + File.separator + tableName + ".xsd");
-
-		try {
-			tableXML.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			tableDTD.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public String PathOfDatabase(String databaseName) {
+		File dataFile = new File(Directory.getAbsolutePath() + File.separator + databaseName);
+        return dataFile.getAbsolutePath();
 	}
 
 }
