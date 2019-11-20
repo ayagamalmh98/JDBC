@@ -1,4 +1,5 @@
-package eg.edu.alexu.csd.oop.db;
+package Main;
+
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,12 +10,16 @@ public class DatabaseImp implements Database {
 	private static DatabaseImp Instance = null;
 	private ArrayList<File> database;
 	private SQL sql;
+	private Parser parser=new Parser();;
+	
 
 	private DatabaseImp() {
 		this.database = new ArrayList<>();
 		this.sql = new SQL();
+		
 
 	}
+	
 
 	public static DatabaseImp getInstance() {
 		if (Instance == null) {
@@ -26,7 +31,7 @@ public class DatabaseImp implements Database {
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
 		databaseName = databaseName.toLowerCase();
-		String query = "";
+		String query = ""; 
 		if (dropIfExists) {
 			query = "Drop Database " + databaseName;
 			try {
@@ -53,6 +58,18 @@ public class DatabaseImp implements Database {
 
 	@Override
 	public boolean executeStructureQuery(String query) throws SQLException {
+		query = query.toLowerCase();
+		boolean dropMatch=false;
+		boolean createMatch=false;
+		if (query.startsWith("drop")) {
+			 dropMatch=parser.drop(query);
+		}
+		else if (query.startsWith("create")) {
+			 createMatch=parser.create(query);
+		}
+		
+		if (dropMatch||createMatch) {
+		
 		String[] splitted = query.replaceAll("\\)", " ").replaceAll("\\(", " ").replaceAll("'", "")
 				.replaceAll("\\s+\\,", ",").split("\\s+|\\,\\s*|\\(|\\)|\\=");
 		String databaseName = splitted[2].toLowerCase();
@@ -82,6 +99,7 @@ public class DatabaseImp implements Database {
 
 			}
 		}
+	}
 		return true;
 	}
 

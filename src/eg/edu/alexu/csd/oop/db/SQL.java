@@ -1,4 +1,5 @@
-package eg.edu.alexu.csd.oop.db;
+package Main;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,7 @@ public class SQL {
 	File Directory;
 
 	public SQL() {
-		Directory = new File("/Users/DELL/eclipse-workspace/DBMS/Directory");
+		Directory = new File("/Users/EGYPT_LAPTOP/eclipse-workspace/DPMS/Directory");
 		Directory.mkdirs();
 	}
 
@@ -46,6 +47,7 @@ public class SQL {
 				return true;
 			}
 		}
+		
 		return false;
 	}
 

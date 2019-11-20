@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.db;
+package Main;
 
 public interface Database {
 	/**
@@ -50,4 +50,5 @@ public interface Database {
 	 *             syntax error
 	 */
 	public int executeUpdateQuery(String query) throws java.sql.SQLException;
+
 }
