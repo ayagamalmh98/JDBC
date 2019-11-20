@@ -50,5 +50,23 @@ public class SQL {
 		
 		return false;
 	}
+	
+	public void createTable(String tableName, String databaseName) {
+		File tableXML = new File(
+				Directory.getAbsolutePath() + File.separator + databaseName + File.separator + tableName + ".xml");
+		File tableDTD = new File(
+				Directory.getAbsolutePath() + File.separator + databaseName + File.separator + tableName + ".xsd");
+
+		try {
+			tableXML.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			tableDTD.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
