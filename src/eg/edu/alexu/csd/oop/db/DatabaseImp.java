@@ -53,37 +53,49 @@ public class DatabaseImp implements Database {
 
     @Override
     public boolean executeStructureQuery(String query) throws SQLException {
-        String[] splitted = query.replaceAll("\\)", " ").replaceAll("\\(", " ").replaceAll("'", "")
-                .replaceAll("\\s+\\,", ",").split("\\s+|\\,\\s*|\\(|\\)|\\=");
-        String databaseName = splitted[2].toLowerCase();
-        if (splitted[1].equalsIgnoreCase("database")) {
-            if (splitted[0].equalsIgnoreCase("create")) {
-                if (sql.databaseExists(databaseName)) {
-                    int index = Index(databaseName);
-                    if (index != -1) {
-                        database.remove(index);
-                    }
-                }
-                File data = sql.createDatabase(databaseName);
-                database.add(data);
-            } else if (splitted[0].equalsIgnoreCase("drop")) {
-                if (sql.databaseExists(databaseName)) {
-                    int index = Index(databaseName);
-                    if (index != -1) {
-                        database.remove(index);
-                    }
-                }
-                sql.dropDatabase(databaseName);
-            }
-        } else if (splitted[1].equalsIgnoreCase("table")) {
-            if (splitted[0].equalsIgnoreCase("create")) {
+       query = query.toLowerCase();
+		boolean dropMatch = false;
+		boolean createMatch = false;
+		if (query.startsWith("drop")) {
+			dropMatch = parser.drop(query);
+		} else if (query.startsWith("create")) {
+			createMatch = parser.create(query);
+		}
 
+		if (dropMatch || createMatch) {
 
-            } else if (splitted[0].equalsIgnoreCase("drop")) {
+			String[] splitted = query.replaceAll("\\)", " ").replaceAll("\\(", " ").replaceAll("'", "")
+					.replaceAll("\\s+\\,", ",").split("\\s+|\\,\\s*|\\(|\\)|\\=");
+			if (splitted[1].equalsIgnoreCase("database")) {
+                String databaseName = splitted[2].toLowerCase();
+				if (splitted[0].equalsIgnoreCase("create")) {
+					if (sql.databaseExists(databaseName)) {
+						int index = Index(databaseName);
+						if (index != -1) {
+							database.remove(index);
+						}
+					}
+					File data = sql.createDatabase(databaseName);
+					database.add(data);
+				} else if (splitted[0].equalsIgnoreCase("drop")) {
+					if (sql.databaseExists(databaseName)) {
+						int index = Index(databaseName);
+						if (index != -1) {
+							database.remove(index);
+						}
+					}
+					sql.dropDatabase(databaseName);
+				}
+			} else if (splitted[1].equalsIgnoreCase("table")) {
+                String TableName = splitted[2].toLowerCase();
+				if (splitted[0].equalsIgnoreCase("create")) {
 
-            }
-        }
-        return true;
+				} else if (splitted[0].equalsIgnoreCase("drop")) {
+
+				}
+			}
+		}
+		return true;
     }
 
     private int Index(String databaseName) {
