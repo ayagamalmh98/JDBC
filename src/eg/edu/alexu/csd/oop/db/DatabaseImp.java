@@ -131,7 +131,6 @@ public class DatabaseImp implements Database {
 			String[] columnsName = columnName.split("\\s*,\\s*");
 		
 		}
-		// one column
 		else{
 		
 		}
