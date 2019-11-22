@@ -53,5 +53,37 @@ public class SQL {
 		File dataFile = new File(Directory.getAbsolutePath() + File.separator + databaseName);
         return dataFile.getAbsolutePath();
 	}
+	
+	public void createTable(String tableName, String databaseName) {
+		File tableXML = new File(
+				Directory.getAbsolutePath() + File.separator + databaseName + File.separator + tableName + ".xml");
+		File tableXSD = new File(
+				Directory.getAbsolutePath() + File.separator + databaseName + File.separator + tableName + ".xsd");
+
+		try {
+			tableXML.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			tableXSD.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean TableExists(String databaseName, String tableName) {
+		for (File dir : Directory.listFiles()) {
+			if (dir.getName().equalsIgnoreCase(databaseName)) {
+				File dataFile = new File(Directory.getAbsolutePath() + File.separator + databaseName);
+				for (File data : dataFile.listFiles()) {
+					if (data.getName().equalsIgnoreCase(tableName)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 }
