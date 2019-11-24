@@ -15,24 +15,9 @@ public class Table {
         dataFile = new File(databasepath, name.toLowerCase() + ".xml");
         schemaFile = new File(databasepath, name.toLowerCase() + ".xsd");
         try {
-            if (!dataFile.createNewFile() || !schemaFile.createNewFile()) {
-                File[] tables = databasepath.listFiles();
-                if (tables != null) {
-                    for (File table : tables
-                    ) {
-                        if (table.isFile() && table.getName().substring(0, table.getName().length() - 4).toLowerCase().equals(name)) {
-                            if (table.getName().endsWith(".xml")) {
-                                dataFile = table;
-                            }
-                            if (table.getName().endsWith(".xsd")) {
-                                schemaFile = table;
-                            }
+            dataFile.createNewFile();
+            schemaFile.createNewFile();
 
-                        }
-                    }
-                }
-
-            }
         } catch (IOException e) {
             System.out.println("Error loading old databases.");
         }
