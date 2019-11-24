@@ -11,9 +11,10 @@ public class Table {
     private File dataFile;
     private File schemaFile;
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public Table(String name, File databasepath) {
-        dataFile = new File(databasepath, name.toLowerCase() + ".xml");
-        schemaFile = new File(databasepath, name.toLowerCase() + ".xsd");
+        dataFile = new File(databasepath, name + ".xml");
+        schemaFile = new File(databasepath, name + ".xsd");
         try {
             dataFile.createNewFile();
             schemaFile.createNewFile();
@@ -66,5 +67,7 @@ public class Table {
         return counter;
         }
 
-
+    String getName(){
+        return dataFile.getName().substring(0,dataFile.getName().length()-4);
+    }
 }

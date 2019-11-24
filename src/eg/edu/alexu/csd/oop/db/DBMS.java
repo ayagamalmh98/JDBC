@@ -18,7 +18,7 @@ public class DBMS implements Database {
                 for (File database : oldDatabases
                 ) {
                     if (database.isDirectory()) {
-                        databases.add(new DB(database.getName().toLowerCase(), workspace));
+                        databases.add(new DB(database.getName(), workspace));
                     }
                 }
             }
@@ -26,7 +26,6 @@ public class DBMS implements Database {
     }
 
     public String createDatabase(String databaseName, boolean dropIfExists) {
-        databaseName = databaseName.toLowerCase();
         String query;
         boolean dropFlag = true, createFlag = true;
         if (dropIfExists) {
