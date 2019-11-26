@@ -3,15 +3,18 @@ package eg.edu.alexu.csd.oop.db;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class DBMS implements Database {
 
     private File workspace;
     private ArrayList<DB> databases;
+    private QueryValidator validator;
 
     public DBMS() {
         databases = new ArrayList<>();
-        workspace = new File("workspace");
+        workspace = new File("sample");
+        validator = QueryValidator.getInstance();
         if (!workspace.mkdir()) {
             File[] oldDatabases = workspace.listFiles();
             if (oldDatabases != null) {
@@ -26,6 +29,7 @@ public class DBMS implements Database {
     }
 
     public String createDatabase(String databaseName, boolean dropIfExists) {
+        databaseName = databaseName.split(Pattern.quote("\\"))[databaseName.split(Pattern.quote("\\")).length - 1];
         String query;
         boolean dropFlag = true, createFlag = true;
         if (dropIfExists) {
@@ -50,12 +54,11 @@ public class DBMS implements Database {
     }
 
     public boolean executeStructureQuery(String query) throws java.sql.SQLException {
-        if(!Parser.create(query)){
+        if (!validator.isValidStructureQuery(query)) {
             throw new SQLException("Invalid query");
 
         }
-        String[] splitted = query.replaceAll("\\)", " ").replaceAll("\\(", " ").replaceAll("'", "")
-                .replaceAll("\\s+\\,", ",").split("\\s+|\\,\\s*|\\(|\\)|\\=");
+        String[] splitted = query.replaceAll("\\)", " ").replaceAll("\\(", " ").replaceAll("'", "").replaceAll("\\s+\\,", ",").split("\\s+|\\,\\s*|\\(|\\)|\\=");
         String databaseName = splitted[2].toLowerCase();
         if (splitted[1].equalsIgnoreCase("database")) {
             if (splitted[0].equalsIgnoreCase("create")) {
@@ -64,32 +67,42 @@ public class DBMS implements Database {
                     dropDatabase(index);
                 }
                 addDatabase(databaseName);
-            } else if (splitted[0].equalsIgnoreCase("drop")) {
+                return true;
+            }
+            if (splitted[0].equalsIgnoreCase("drop")) {
                 int index = findDatabaseByName(databaseName);
                 if (index != -1) {
                     dropDatabase(index);
+                    return true;
+                } else {
+                    return false;
                 }
             }
-        } else if (splitted[1].equalsIgnoreCase("table")) {
+        }
+        if (splitted[1].equalsIgnoreCase("table")) {
+            if (databases.isEmpty()) {
+                throw new SQLException();
+            }
             if (splitted[0].equalsIgnoreCase("create")) {
-
-
-            } else if (splitted[0].equalsIgnoreCase("drop")) {
+      //          return databases.get(databases.size() - 1).addTable("test", new String[]{"col"});
 
             }
+            if (splitted[0].equalsIgnoreCase("drop")) {
+                return databases.get(databases.size() - 1).deleteTable("test", new String[]{"col"});
+            }
         }
-        return true;
+        return false;
     }
 
     public Object[][] executeQuery(String query) throws java.sql.SQLException {
-        if(!Parser.select(query)){
+        if (!validator.isValidReadQuery(query)) {
             throw new SQLException("Invalid query");
         }
         return null;
     }
 
     public int executeUpdateQuery(String query) throws java.sql.SQLException {
-        if(!(Parser.insert(query)||Parser.delete(query)||Parser.update(query))){
+        if (!validator.isValidUpdateQuery(query)) {
             throw new SQLException("Invalid query");
         }
         return 0;

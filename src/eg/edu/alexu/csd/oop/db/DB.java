@@ -16,7 +16,7 @@ public class DB {
                 for (File table : oldTables
                 ) {
                     if (table.isFile() && table.getName().endsWith(".xml")) {
-                        tables.add(new Table(table.getName().substring(0, table.getName().length() - 4), directory));
+                        tables.add(new Table(table.getName().substring(0, table.getName().length() - 4), directory,null));
                     }
                 }
             }
@@ -29,11 +29,12 @@ public class DB {
         return directory.delete();
     }
 
-    public void addTable(String name,String[] columns){
+    public boolean addTable(String name,String[][] columns){
         if(tableExist(name)){
-            throw new RuntimeException("Found a table with same name !");
+            return false;
         }else {
-            tables.add(new Table(name,directory));
+            tables.add(new Table(name,directory,columns));
+            return true;
         }
 
     }
@@ -48,5 +49,7 @@ public class DB {
     }
 
 
-
+    public boolean deleteTable(String test, String[] strings) {
+        return true;
+    }
 }
