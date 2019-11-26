@@ -214,7 +214,7 @@ public class Table {
 			throw new RuntimeException("Error in where clause, Column " + columnName + " doesn't exist.");
 		}
 
-		int columnIndex = 0;
+		int rowIndex = 0;
 		if (isInt(comparedValue)) {
 			Integer value = Integer.parseInt(comparedValue);
 			if (getType(columnName).equals("int")) {
@@ -229,7 +229,7 @@ public class Table {
 								filteredCells.add(cell);
 							i++;
 						}
-						filtered[columnIndex++] = filteredCells.toArray();
+						filtered[rowIndex++] = filteredCells.toArray();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -239,7 +239,7 @@ public class Table {
 			String value = comparedValue.toString();
 			if (getType(columnName).equals("varchar")) {
 				int i = 0;
-				columnIndex = 0;
+				rowIndex = 0;
 				for (Object[] row : cols) {
 					ArrayList<Object> filteredCells = new ArrayList<>();
 					i = 0;
@@ -249,7 +249,7 @@ public class Table {
 							filteredCells.add(cell);
 						i++;
 					}
-					filtered[columnIndex++] = filteredCells.toArray();
+					filtered[rowIndex++] = filteredCells.toArray();
 				}
 			}
 		}
