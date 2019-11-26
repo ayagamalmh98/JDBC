@@ -17,7 +17,6 @@ public interface Database {
 
 	/**
 	 * Creates/drops table or database.
-	 * 
 	 * @param query
 	 *            create or drop, table or database query
 	 * @returns true if success, or false otherwise

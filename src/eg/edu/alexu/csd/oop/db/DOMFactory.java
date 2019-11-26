@@ -59,6 +59,5 @@ public class DOMFactory {
             return false;
         }
         return true;
-
     }
 }
