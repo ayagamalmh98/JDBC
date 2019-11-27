@@ -220,61 +220,59 @@ public class Table {
         return false;
     }
 
-    public Object[][] WherePart(Object[][] cols, String[] splitted, Table table) {
-        if (cols == null) {
-            throw new RuntimeException("Error invalid columns");
-        }
-        Object[][] filtered = new Object[cols.length][cols[0].length];
-        splitted = deleteQuotes(splitted);
-        String columnName = splitted[splitted.length - 3];
-        String operator = splitted[splitted.length - 2];
-        String comparedValue = splitted[splitted.length - 1];
+    public Object[][] WherePart(Object[][] cols, String conditionColumn, char conditionOperator, String conditionValue,
+			Table table) {
+		if (cols == null) {
+			throw new RuntimeException("Error invalid columns");
+		}
+		Object[][] filtered = new Object[cols.length][cols[0].length];
 
-        if (!table.columnExists(columnName)) {
-            throw new RuntimeException("Error in where clause, Column " + columnName + " doesn't exist.");
-        }
+		if (!table.columnExists(conditionColumn)) {
+			throw new RuntimeException("Error in where clause, Column " + conditionColumn + " doesn't exist.");
+		}
 
-        int rowIndex = 0;
-        if (isInt(comparedValue)) {
-            Integer value = Integer.parseInt(comparedValue);
-            if (getType(columnName).equals("int")) {
-                try {
-                    int i = 0;
-                    for (Object[] row : cols) {
-                        ArrayList<Object> filteredCells = new ArrayList<>();
-                        i = 0;
-                        for (Object cell : row) {
-                            Object x = getCell(i, columnName);
-                            if (compare(x, value, operator))
-                                filteredCells.add(cell);
-                            i++;
-                        }
-                        filtered[rowIndex++] = filteredCells.toArray();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (isLetter(comparedValue)) {
-            String value = comparedValue;
-            if (getType(columnName).equals("varchar")) {
-                int i = 0;
-                rowIndex = 0;
-                for (Object[] row : cols) {
-                    ArrayList<Object> filteredCells = new ArrayList<>();
-                    i = 0;
-                    for (Object cell : row) {
-                        Object x = getCell(i, columnName);
-                        if (compare(x, value, operator))
-                            filteredCells.add(cell);
-                        i++;
-                    }
-                    filtered[rowIndex++] = filteredCells.toArray();
-                }
-            }
-        }
-        return filtered;
-    }
+		int rowIndex = 0;
+		if (isInt(conditionValue)) {
+			Integer value = Integer.parseInt(conditionValue);
+			if (getType(conditionColumn).equals("int")) {
+				try {
+					int i = 0;
+					for (Object[] row : cols) {
+						ArrayList<Object> filteredCells = new ArrayList<>();
+						i = 0;
+						for (Object cell : row) {
+							Object x = getCell(i, conditionColumn);
+							if (compare(x, value, conditionOperator))
+								filteredCells.add(cell);
+							i++;
+						}
+						filtered[rowIndex++] = filteredCells.toArray();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		} else if (isLetter(conditionValue)) {
+			String value = conditionValue.toString();
+			if (getType(conditionColumn).equals("varchar")) {
+				int i = 0;
+				rowIndex = 0;
+				for (Object[] row : cols) {
+					ArrayList<Object> filteredCells = new ArrayList<>();
+					i = 0;
+					for (Object cell : row) {
+						Object x = getCell(i, conditionColumn);
+						if (compare(x, value, conditionOperator))
+							filteredCells.add(cell);
+						i++;
+					}
+					filtered[rowIndex++] = filteredCells.toArray();
+				}
+			}
+		}
+		return filtered;
+	}
+
 
     private static boolean isInt(String strNum) {
         if (strNum == null) {
@@ -301,30 +299,31 @@ public class Table {
         return false;
     }
 
-    private boolean compare(Object val1, Object val2, String operator) {
-        if (val1 instanceof Integer && val2 instanceof Integer) {
-            Integer value1 = (Integer) val1;
-            Integer value2 = (Integer) val2;
-            if (operator.equals("=")) {
-                return value1.equals(value2);
-            } else if (operator.equals(">")) {
-                return value1 > value2;
-            } else if (operator.equals("<")) {
-                return value1 < value2;
-            }
-        } else if (val1 instanceof String && val2 instanceof String) {
-            String value1 = (String) val1;
-            String value2 = (String) val2;
-            if (operator.equals("=")) {
-                return value1.compareToIgnoreCase(value2) == 0;
-            } else if (operator.equals(">")) {
-                return value1.compareTo(value2) > 0;
-            } else if (operator.equals("<")) {
-                return value1.compareTo(value2) < 0;
-            }
-        }
-        return false;
-    }
+   private boolean compare(Object val1, Object val2, char operator) {
+		String conditionOperator = Character.toString(operator);
+		if (val1 instanceof Integer && val2 instanceof Integer) {
+			Integer value1 = (Integer) val1;
+			Integer value2 = (Integer) val2;
+			if (conditionOperator.equals("=")) {
+				return Integer.compare(value1.intValue(), value2.intValue()) == 0 ? true : false;
+			} else if (conditionOperator.equals(">")) {
+				return Integer.compare(value1.intValue(), value2.intValue()) > 0 ? true : false;
+			} else if (conditionOperator.equals("<")) {
+				return Integer.compare(value1.intValue(), value2.intValue()) < 0 ? true : false;
+			}
+		} else if (val1 instanceof String && val2 instanceof String) {
+			String value1 = (String) val1;
+			String value2 = (String) val2;
+			if (conditionOperator.equals("=")) {
+				return value1.compareToIgnoreCase(value2) == 0 ? true : false;
+			} else if (conditionOperator.equals(">")) {
+				return value1.compareTo(value2) > 0 ? true : false;
+			} else if (conditionOperator.equals("<")) {
+				return value1.compareTo(value2) < 0 ? true : false;
+			}
+		}
+		return false;
+	}
 
     private String getType(String columnName) {
         Document doc = DOMFactory.getDomObj(schemaFile);
