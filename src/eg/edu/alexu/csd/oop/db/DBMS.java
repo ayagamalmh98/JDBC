@@ -10,6 +10,7 @@ public class DBMS implements Database {
     private File workspace;
     private ArrayList<DB> databases;
     private QueryValidator validator;
+    private DataExtractor extract;
 
     public DBMS() throws SQLException {
         databases = new ArrayList<>();
@@ -96,93 +97,117 @@ public class DBMS implements Database {
 
     @SuppressWarnings("unused")
     public Object[][] executeQuery(String query) throws java.sql.SQLException {
-        if (!validator.isValidReadQuery(query)) {
-            throw new SQLException("Invalid query");
-        }
-        query = query.toLowerCase();
-        String[] splitted = query.replaceAll("\\)", " ").replaceAll("\\(", " ").replaceAll("\\s+\\,", ",")
-                .replaceAll("\\s+\\,", ",").replaceAll("\\,\\s+", ",").replaceAll("\\s+\\,\\s+", ",")
-                .replaceAll("\\s*\"\\s*", "\"").replaceAll("\\s*'\\s*", "'").replaceAll("=", " = ")
-                .replaceAll("<", " < ").replaceAll(">", " > ").split("\\s+");
-        String ColumnName = splitted[1];
-        String TableName = splitted[3];
-        boolean where = false;
-        if (splitted.length > 4) {
-            where = true;
-        }
-        DB currentDB = databases.get(databases.size() - 1);
+       	if (!validator.isValidReadQuery(query)) {
+			throw new SQLException("Invalid query");
+		}
 
-        if (!currentDB.tableExist(TableName)) {
-            throw new RuntimeException("Table " + TableName + " does not exists in " + currentDB.getName());
-        }
+		DB currentDB = databases.get(databases.size() - 1);
+		
 
-        Table currentTable = currentDB.getTables().get(currentDB.getTableIndex(TableName));
+		if (query.contains("*") && !query.contains("where")) {
+			String TableName = extract.selectAllData(query).tableName;
+			Table currentTable = currentDB.getTables().get(currentDB.getTableIndex(TableName));
+			String[] ColumnName = extract.selectAllData(query).columns;
+			if (!currentDB.tableExist(TableName)) {
+				throw new RuntimeException("Table " + TableName + " does not exists in " + currentDB.getName());
+			}
+			String[][] columns = currentTable.getColumns();
+			Object[][] Output = new Object[columns.length][columns[0].length];
+			for (int i = 0; i < columns.length; i++) {
+				for (int j = 0; j < columns[0].length; j++) {
+					if (isInt(columns[i][j])) {
+						Output[i][j] = Integer.parseInt(columns[i][j]);
+					} else if (isLetter(columns[i][j])) {
+						Output[i][j] = columns[i][j].toString();
+					} else {
+						Output[i][j] = null;
+					}
+				}
+			}
+			return Output;
 
-        if (ColumnName.equals("*")) {
-            String[][] columns = currentTable.selectAll();
-            Object[][] Output = new Object[columns.length][columns[0].length];
-            for (int i = 0; i < columns.length; i++) {
-                for (int j = 0; j < columns[0].length; j++) {
-                    if (isInt(columns[i][j])) {
-                        Output[i][j] = Integer.parseInt(columns[i][j]);
-                    } else if (isLetter(columns[i][j])) {
-                        Output[i][j] = columns[i][j].toString();
-                    } else {
-                        Output[i][j] = null;
-                    }
-                }
-            }
-            if (where) {
-                return currentTable.WherePart(Output, splitted, currentTable);
-            }
-            return Output;
+		} else if (query.contains("*") && query.contains("where")) {
+			String TableName = extract.selectAllWhereData(query).tableName;
+			Table currentTable = currentDB.getTables().get(currentDB.getTableIndex(TableName));
+			String[] ColumnName = extract.selectAllWhereData(query).columns;
+			if (!currentDB.tableExist(TableName)) {
+				throw new RuntimeException("Table " + TableName + " does not exists in " + currentDB.getName());
+			}
+			String[][] columns = currentTable.getColumns();
+			Object[][] Output = new Object[columns.length][columns[0].length];
+			for (int i = 0; i < columns.length; i++) {
+				for (int j = 0; j < columns[0].length; j++) {
+					if (isInt(columns[i][j])) {
+						Output[i][j] = Integer.parseInt(columns[i][j]);
+					} else if (isLetter(columns[i][j])) {
+						Output[i][j] = columns[i][j].toString();
+					} else {
+						Output[i][j] = null;
+					}
+				}
+			}
 
-        } else if (ColumnName.contains(",")) {
-            String[] columnsName = ColumnName.split("\\s*,\\s*");
-            String[][] columns = currentTable.selectSome(columnsName);
-            Object[][] Output = new Object[columns.length][columns[0].length];
-            if (columns == null) {
-                throw new RuntimeException("Error invalid columns");
-            } else {
-                for (int i = 0; i < columns.length; i++) {
-                    for (int j = 0; j < columns[0].length; j++) {
-                        if (isInt(columns[i][j])) {
-                            Output[i][j] = Integer.parseInt(columns[i][j]);
-                        } else if (isLetter(columns[i][j])) {
-                            Output[i][j] = columns[i][j].toString();
-                        } else {
-                            Output[i][j] = null;
-                        }
-                    }
-                }
+			return currentTable.WherePart(Output, extract.selectAllWhereData(query).conditionColumn,
+					extract.selectAllWhereData(query).conditionOperator,
+					extract.selectAllWhereData(query).conditionValue, currentTable);
 
-            }
-            if (where) {
-                return currentTable.WherePart(Output, splitted, currentTable);
-            }
-            return Output;
+		} else if (!query.contains("*") && !query.contains("where")) {
+			String TableName = extract.selectSomeData(query).tableName;
+			Table currentTable = currentDB.getTables().get(currentDB.getTableIndex(TableName));
+			String[] columnsName = extract.selectSomeData(query).columns;
+			if (!currentDB.tableExist(TableName)) {
+				throw new RuntimeException("Table " + TableName + " does not exists in " + currentDB.getName());
+			}
+			String[][] columns = currentTable.getCertainColumns(columnsName);
+			Object[][] Output = new Object[columns.length][columns[0].length];
+			if (columns == null) {
+				throw new RuntimeException("Error invalid columns");
+			} else {
+				for (int i = 0; i < columns.length; i++) {
+					for (int j = 0; j < columns[0].length; j++) {
+						if (isInt(columns[i][j])) {
+							Output[i][j] = Integer.parseInt(columns[i][j]);
+						} else if (isLetter(columns[i][j])) {
+							Output[i][j] = columns[i][j].toString();
+						} else {
+							Output[i][j] = null;
+						}
+					}
+				}
 
-        } else {
-            String[][] columns = currentTable.getOneColumn(ColumnName);
-            Object[][] Output = new Object[columns.length][1];
-            if (columns == null) {
-                throw new RuntimeException("Error invalid columns");
-            } else {
-                for (int i = 0; i < columns.length; i++) {
-                    if (isInt(columns[i][0])) {
-                        Output[i][0] = Integer.parseInt(columns[i][0]);
-                    } else if (isLetter(columns[i][0])) {
-                        Output[i][0] = columns[i][0].toString();
-                    } else {
-                        Output[i][0] = null;
-                    }
-                }
-            }
-            if (where) {
-                return currentTable.WherePart(Output, splitted, currentTable);
-            }
-            return Output;
-        }
+			}
+			return Output;
+
+		} else if (!query.contains("*") && query.contains("where")) {
+			String TableName = extract.selectSomeWhereData(query).tableName;
+			Table currentTable = currentDB.getTables().get(currentDB.getTableIndex(TableName));
+			String[] columnsName = extract.selectSomeWhereData(query).columns;
+			if (!currentDB.tableExist(TableName)) {
+				throw new RuntimeException("Table " + TableName + " does not exists in " + currentDB.getName());
+			}
+			String[][] columns = currentTable.getCertainColumns(columnsName);
+			Object[][] Output = new Object[columns.length][columns[0].length];
+			if (columns == null) {
+				throw new RuntimeException("Error invalid columns");
+			} else {
+				for (int i = 0; i < columns.length; i++) {
+					for (int j = 0; j < columns[0].length; j++) {
+						if (isInt(columns[i][j])) {
+							Output[i][j] = Integer.parseInt(columns[i][j]);
+						} else if (isLetter(columns[i][j])) {
+							Output[i][j] = columns[i][j].toString();
+						} else {
+							Output[i][j] = null;
+						}
+					}
+				}
+
+			}
+			return currentTable.WherePart(Output, extract.selectSomeWhereData(query).conditionColumn,
+					extract.selectSomeWhereData(query).conditionOperator,
+					extract.selectSomeWhereData(query).conditionValue, currentTable);
+		}
+		return null;
     }
 
     private static boolean isInt(String strNum) {
