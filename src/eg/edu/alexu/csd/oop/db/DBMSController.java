@@ -4,14 +4,22 @@ import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DBMSController {
-    private DBMSController() {
+public class DBMSController  {
+    private DBMSController() throws SQLException {
         manager = new DBMS();
     }
 
-    private static DBMSController instance = new DBMSController();
+    private static DBMSController instance ;
     private static Database manager;
 
+    static {
+        try {
+            instance = new DBMSController();
+
+        }catch (SQLException s){
+
+        }
+    }
     public DBMSController getInstance() {
         return instance;
     }

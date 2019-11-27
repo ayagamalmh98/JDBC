@@ -1,71 +1,74 @@
 package eg.edu.alexu.csd.oop.db;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DB {
-	private File directory;
-	private ArrayList<Table> tables;
+    private File directory;
+    private ArrayList<Table> tables;
 
-	public DB(String name, File parentDirectory) {
-		tables = new ArrayList<>();
-		directory = new File(parentDirectory, name);
-		if (!directory.mkdir()) {
-			File[] oldTables = directory.listFiles();
-			if (oldTables != null) {
-				for (File table : oldTables) {
-					if (table.isFile() && table.getName().endsWith(".xml")) {
-						tables.add(
-								new Table(table.getName().substring(0, table.getName().length() - 4), directory, null));
-					}
-				}
-			}
-		}
-	}
+    public DB(String name, File parentDirectory) throws SQLException {
+        tables = new ArrayList<>();
+        directory = new File(parentDirectory, name);
+        if (!directory.mkdir()) {
+            File[] oldTables = directory.listFiles();
+            if (oldTables != null) {
+                for (File table : oldTables) {
+                    if (table.isFile() && table.getName().endsWith(".xml")) {
+                        DataCarrier temp = new DataCarrier();
+                        temp.tableName = table.getName().substring(0, table.getName().length() - 4);
+                        tables.add(
+                                new Table( directory, temp));
+                    }
+                }
+            }
+        }
+    }
 
-	public String getName() {
-		return directory.getName();
-	}
+    public String getName() {
+        return directory.getName();
+    }
 
-	public boolean deleteDatabase() {
-		return directory.delete();
-	}
+    public boolean deleteDatabase() {
+        return directory.delete();
+    }
 
-	public boolean addTable(String name, String[][] columns) {
-		if (tableExist(name)) {
-			return false;
-		} else {
-			tables.add(new Table(name, directory, columns));
-			return true;
-		}
+    public boolean addTable( DataCarrier carrier) throws SQLException {
+        if (tableExist(carrier.tableName)) {
+            return false;
+        } else {
+            tables.add(new Table(directory, carrier));
+            return true;
+        }
 
-	}
+    }
 
-	public boolean tableExist(String name) {
-		for (Table t : tables) {
-			if (name.equalsIgnoreCase(t.getName())) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public boolean tableExist(String name) {
+        for (Table t : tables) {
+            if (name.equalsIgnoreCase(t.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public boolean deleteTable(String test, String[] strings) {
-		return true;
-	}
+    public boolean deleteTable(String test, String[] strings) {
+        return true;
+    }
 
-	public int getTableIndex(String name) {
-		int i = 0;
-		for (Table table : tables) {
-			if (table.getName().equalsIgnoreCase(name))
-				return i;
-			i++;
-		}
-		return -1;
-	}
+    public int getTableIndex(String name) {
+        int i = 0;
+        for (Table table : tables) {
+            if (table.getName().equalsIgnoreCase(name))
+                return i;
+            i++;
+        }
+        return -1;
+    }
 
-	public ArrayList<Table> getTables() {
-		return tables;
-	}
+    public ArrayList<Table> getTables() {
+        return tables;
+    }
 
 }

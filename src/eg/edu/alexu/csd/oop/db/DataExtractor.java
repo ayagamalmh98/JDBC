@@ -8,6 +8,15 @@ import static eg.edu.alexu.csd.oop.db.QueryValidator.*;
 
 public class DataExtractor {
 
+    private static DataExtractor instance = new DataExtractor();
+    private DataExtractor(){
+
+    }
+
+    public static DataExtractor getInstance() {
+        return instance;
+    }
+
     public DataCarrier createTableData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(createTablePattern);
@@ -23,7 +32,7 @@ public class DataExtractor {
                 isolateMatcher = isolateTwoWords.matcher(data[i]);
                 if (isolateMatcher.matches()) {
                     toBeReturn.columns[i] = isolateMatcher.group(1);
-                    toBeReturn.columnsTypes[i] = isolateMatcher.group(2).equalsIgnoreCase("varchar") ? "xs:string" : "xs:int";
+                    toBeReturn.columnsTypes[i] = isolateMatcher.group(2).equalsIgnoreCase("varchar") ? "string" : "int";
                 }
             }
             return toBeReturn;
@@ -40,12 +49,32 @@ public class DataExtractor {
             String[] values = mat.group(23).split(",");
             toBeReturn.tableName = mat.group(7);
             if (columns.length != values.length) {
-                throw new SQLException();
+                throw new SQLException("Columns and values count doesn't match !");
             }
             toBeReturn.columns = new String[columns.length];
             toBeReturn.values = new String[columns.length];
             fillColumns(toBeReturn, columns);
             fillValues(toBeReturn, values);
+            return toBeReturn;
+        }
+        return null;
+    }
+
+    public DataCarrier createDBData(String query){
+        return DBData(query,createDBPattern);
+    }
+    public DataCarrier dropDBData(String query){
+        return DBData(query,dropDBPattern);
+    }
+    public DataCarrier dropTableData(String query){
+        return dropDeleteTable(query, dropTablePattern);
+    }
+    private DataCarrier DBData(String query,String pattern){
+        DataCarrier toBeReturn = new DataCarrier();
+        Pattern pat = Pattern.compile(pattern);
+        Matcher mat = pat.matcher(query);
+        if (mat.matches()) {
+            toBeReturn.DBName = mat.group(7);
             return toBeReturn;
         }
         return null;
@@ -66,6 +95,10 @@ public class DataExtractor {
     }
 
     public DataCarrier deleteAllData(String query) {
+        return dropDeleteTable(query, deleteAllPattern);
+    }
+
+    private DataCarrier dropDeleteTable(String query, String deleteAllPattern) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(deleteAllPattern);
         Matcher mat = pat.matcher(query);

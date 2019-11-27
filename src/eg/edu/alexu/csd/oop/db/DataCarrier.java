@@ -4,6 +4,7 @@ public class DataCarrier {
     public DataCarrier() {
     }
 
+    public String DBName;
     public String tableName;
     public String conditionColumn;
     public String conditionValue;
