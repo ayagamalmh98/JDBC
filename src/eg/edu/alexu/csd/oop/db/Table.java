@@ -273,8 +273,58 @@ public class Table {
 
 		int rowIndex = 0;
 		if (isInt(conditionValue)) {
-			Integer value = Integer.parseInt(conditionValue);
-			if (getType(conditionColumn).equals("int")) {
+			if (getType(conditionColumn).equals("xs:int")) {
+				Integer value = Integer.parseInt(conditionValue);
+				try {
+					int i = 0;
+					for (Object[] row : cols) {
+						ArrayList<Object> filteredCells = new ArrayList<>();
+						i = 0;
+						for (Object cell : row) {
+							Object x = getCell(i, conditionColumn);
+							if (compare(x, value, conditionOperator))
+								filteredCells.add(cell);
+							i++;
+						}
+						filtered[rowIndex++] = filteredCells.toArray();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else if (getType(conditionColumn).equals("xs:varchar")) {
+				String value = conditionValue.toString();
+				int i = 0;
+				rowIndex = 0;
+				for (Object[] row : cols) {
+					ArrayList<Object> filteredCells = new ArrayList<>();
+					i = 0;
+					for (Object cell : row) {
+						Object x = getCell(i, conditionColumn);
+						if (compare(x, value, conditionOperator))
+							filteredCells.add(cell);
+						i++;
+					}
+					filtered[rowIndex++] = filteredCells.toArray();
+				}
+			}
+		} else if (isLetter(conditionValue)) {
+			if (getType(conditionColumn).equals("xs:varchar")) {
+				String value = conditionValue.toString();
+				int i = 0;
+				rowIndex = 0;
+				for (Object[] row : cols) {
+					ArrayList<Object> filteredCells = new ArrayList<>();
+					i = 0;
+					for (Object cell : row) {
+						Object x = getCell(i, conditionColumn);
+						if (compare(x, value, conditionOperator))
+							filteredCells.add(cell);
+						i++;
+					}
+					filtered[rowIndex++] = filteredCells.toArray();
+				}
+			} else if (getType(conditionColumn).equals("xs:int")) {
+				Integer value = Integer.parseInt(conditionValue);
 				try {
 					int i = 0;
 					for (Object[] row : cols) {
@@ -292,28 +342,12 @@ public class Table {
 					e.printStackTrace();
 				}
 			}
-		} else if (isLetter(conditionValue)) {
-			String value = conditionValue.toString();
-			if (getType(conditionColumn).equals("varchar")) {
-				int i = 0;
-				rowIndex = 0;
-				for (Object[] row : cols) {
-					ArrayList<Object> filteredCells = new ArrayList<>();
-					i = 0;
-					for (Object cell : row) {
-						Object x = getCell(i, conditionColumn);
-						if (compare(x, value, conditionOperator))
-							filteredCells.add(cell);
-						i++;
-					}
-					filtered[rowIndex++] = filteredCells.toArray();
-				}
-			}
 		}
 		return filtered;
 	}
 
 	private static boolean isInt(String strNum) {
+		strNum = strNum.replaceAll("\'", "");
 		if (strNum == null) {
 			return false;
 		}
@@ -326,6 +360,7 @@ public class Table {
 	}
 
 	private boolean isLetter(String s) {
+		s = s.replaceAll("\'", "");
 		if (s == null) {
 			return false;
 		}
@@ -338,11 +373,11 @@ public class Table {
 		return false;
 	}
 
-	private boolean compare(Object val1, Object val2, char operator) {
+	private boolean compare(Object ColumnValue, Object conditionValue, char operator) {
 		String conditionOperator = Character.toString(operator);
-		if (val1 instanceof Integer && val2 instanceof Integer) {
-			Integer value1 = (Integer) val1;
-			Integer value2 = (Integer) val2;
+		if (ColumnValue instanceof Integer && conditionValue instanceof Integer) {
+			Integer value1 = (Integer) ColumnValue;
+			Integer value2 = (Integer) conditionValue;
 			if (conditionOperator.equals("=")) {
 				return Integer.compare(value1.intValue(), value2.intValue()) == 0 ? true : false;
 			} else if (conditionOperator.equals(">")) {
@@ -350,9 +385,9 @@ public class Table {
 			} else if (conditionOperator.equals("<")) {
 				return Integer.compare(value1.intValue(), value2.intValue()) < 0 ? true : false;
 			}
-		} else if (val1 instanceof String && val2 instanceof String) {
-			String value1 = (String) val1;
-			String value2 = (String) val2;
+		} else if (ColumnValue instanceof String && conditionValue instanceof String) {
+			String value1 = (String) ColumnValue;
+			String value2 = (String) conditionValue;
 			if (conditionOperator.equals("=")) {
 				return value1.compareToIgnoreCase(value2) == 0 ? true : false;
 			} else if (conditionOperator.equals(">")) {
@@ -366,7 +401,7 @@ public class Table {
 
 	private String getType(String columnName) {
 		Document doc = DOMFactory.getDomObj(schemaFile);
-		NodeList elements = doc.getElementsByTagName("element");
+		NodeList elements = doc.getElementsByTagName("xs:attribute");
 		String type = null;
 		for (int i = 0; i < elements.getLength(); i++) {
 			if (elements.item(i).getAttributes().item(0).getNodeName().equals(columnName)) {
@@ -390,18 +425,6 @@ public class Table {
 		return cell;
 	}
 
-	public static String[] deleteQuotes(String[] splittedQuery) {
-		ArrayList<String> filtered = new ArrayList<>();
-		for (String x : splittedQuery) {
-			if (x.charAt(0) == '\'') {
-				filtered.add(x.substring(1, x.length() - 1));
-			} else {
-				filtered.add(x);
-			}
-		}
-		return filtered.toArray(new String[0]);
-	}
-
 	private void checkDataFile(Document doc, String error) throws SQLException {
 		if (!DOMFactory.validateXML(doc, schemaFile)) {
 			throw new SQLException(error);
@@ -409,3 +432,4 @@ public class Table {
 	}
 
 }
+
