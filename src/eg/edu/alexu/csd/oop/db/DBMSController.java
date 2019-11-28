@@ -30,8 +30,13 @@ public class DBMSController {
 		String[] splitted = query.trim().split("\\s+");
 		switch (getFirstWord(query)) {
 		case "CREATE":
-			String test = manager.createDatabase(query, false);
-			if (test == null) {
+			String testD = null;
+			boolean testT = false;
+			if(splitted[1].equalsIgnoreCase("database"))
+				testD = manager.createDatabase(query, false);
+			else if(splitted[1].equalsIgnoreCase("table"))
+				testT = manager.executeStructureQuery(query);
+			if (testD == null || !testT) {
 				new String(splitted[1].toUpperCase() + " wasn't Created Successfully.");
 			} else {
 				return new String(splitted[1].toUpperCase() + " Created Successfully.");
