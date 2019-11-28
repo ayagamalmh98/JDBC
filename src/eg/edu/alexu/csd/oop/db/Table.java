@@ -188,24 +188,65 @@ public class Table {
 
     }
 
-    public String[][] getOneColumn(String columnName) {
-        Document doc = DOMFactory.getDomObj(dataFile);
-        NodeList rows = doc.getElementsByTagName("row");
-        String[][] table = new String[rows.getLength()][1];
-        for (int i = 0; i < rows.getLength(); i++) {
-            int count = 0;
-            for (int j = 0; j < rows.item(0).getAttributes().getLength(); j++) {
-                if (rows.item(i).getAttributes().item(j).getNodeName().equals(columnName)) {
-                    table[i][count] = rows.item(i).getAttributes().item(j).getNodeValue();
-                    count++;
-                }
-            }
-            if (count != 1) {
-                return null;
-            }
-        }
-        return table;
-    }
+    public String[][] getColumns() {
+		Document readtable = DOMFactory.getDomObj(dataFile);
+		NodeList rows = readtable.getElementsByTagName("row");
+		String[][] table = new String[rows.getLength()][rows.item(0).getAttributes().getLength()];
+		/*
+		 * for (int j = 0; j < rows.item(0).getAttributes().getLength(); j++) {
+		 * table[0][j] = rows.item(0).getAttributes().item(j).getNodeName(); }
+		 */
+		for (int i = 0; i < rows.getLength(); i++) {
+			for (int j = 0; j < rows.item(0).getAttributes().getLength(); j++) {
+				table[i][j] = rows.item(i).getAttributes().item(j).getNodeValue();
+			}
+		}
+		return table;
+	}
+
+	public String[][] getCertainColumns(String[] columnsName) {
+		Document readtable = DOMFactory.getDomObj(dataFile);
+		NodeList rows = readtable.getElementsByTagName("row");
+		String[][] table = new String[rows.getLength()][columnsName.length];
+		/*
+		 * for (int j = 0; j < columnsName.length; j++) { table[0][j] = columnsName[j];
+		 * }
+		 */
+		for (int i = 0; i < rows.getLength(); i++) {
+			int count = 0;
+			for (int j = 0; j < rows.item(0).getAttributes().getLength(); j++) {
+				if (rows.item(i).getAttributes().item(j).getNodeName().equals(columnsName[count])) {
+					table[i][count] = rows.item(i).getAttributes().item(j).getNodeValue();
+					count++;
+				}
+			}
+			if (count != columnsName.length) {
+				return null;
+			}
+		}
+		return table;
+	}
+
+	public String[][] getOneColumn(String columnName) {
+		Document readtable = DOMFactory.getDomObj(dataFile);
+		NodeList rows = readtable.getElementsByTagName("row");
+		String[][] table = new String[rows.getLength()][1];
+		// table[0][0] = columnName;
+		for (int i = 0; i < rows.getLength(); i++) {
+			int count = 0;
+			for (int j = 0; j < rows.item(0).getAttributes().getLength(); j++) {
+				if (rows.item(i).getAttributes().item(j).getNodeName().equals(columnName)) {
+					table[i][count] = rows.item(i).getAttributes().item(j).getNodeValue();
+					count++;
+				}
+			}
+			if (count != 1) {
+				return null;
+			}
+		}
+		return table;
+	}
+
 
     public boolean columnExists(String columnName) {
         Document doc = DOMFactory.getDomObj(dataFile);
