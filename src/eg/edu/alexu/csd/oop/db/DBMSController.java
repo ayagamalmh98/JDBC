@@ -37,17 +37,17 @@ public class DBMSController {
 			else if(splitted[1].equalsIgnoreCase("table"))
 				testT = manager.executeStructureQuery(query);
 			if (testD == null || !testT) {
-				new String(splitted[1].toUpperCase() + " wasn't Created Successfully.");
+				new String(splitted[1] + " wasn't Created Successfully.");
 			} else {
-				return new String(splitted[1].toUpperCase() + " Created Successfully.");
+				return new String(splitted[1] + " Created Successfully.");
 			}
 		case "USE":
 		case "DROP":
 			boolean test1 = manager.executeStructureQuery(query);
 			if (test1)
-				return new String(splitted[1].toUpperCase() + " Dropped Successfully.");
+				return new String(splitted[1] + " Dropped Successfully.");
 			else
-				return new String(splitted[1].toUpperCase() + " Wasn't Dropped Successfully.");
+				return new String(splitted[1] + " Wasn't Dropped Successfully.");
 		case "SELECT":
 			Object[][] test2 = manager.executeQuery(query);
 			if (test2 == null) {
