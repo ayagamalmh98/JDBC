@@ -13,7 +13,7 @@ public class UI {
 		sc = new Scanner(System.in);
 		DBMSController executor = DBMSController.getInstance();
 		while (true) {
-			System.out.println("Enter your Input :");
+			System.out.println("SQL >> ");
 			String query = sc.nextLine();
 			if (query.isEmpty()) {
 				query = sc.nextLine();

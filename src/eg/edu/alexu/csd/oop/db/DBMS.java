@@ -5,11 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import eg.edu.alexu.csd.oop.db.parser.Parser;
 import eg.edu.alexu.csd.oop.db.parser.QV;
-import eg.edu.alexu.csd.oop.db.parser.ValidReadQuery;
-import eg.edu.alexu.csd.oop.db.parser.ValidStructure;
-import eg.edu.alexu.csd.oop.db.parser.ValidUpdateQuery;
 
 public class DBMS implements Database {
 
@@ -17,7 +13,7 @@ public class DBMS implements Database {
     private ArrayList<DB> databases;
     private QV Validator;
 
-    public DBMS()  {
+    public DBMS() {
         databases = new ArrayList<>();
         workspace = new File("workspace");
         Validator = new QV();
@@ -34,14 +30,14 @@ public class DBMS implements Database {
         String query;
         boolean createFlag = true;
         try {
-			dropIfExists = DBExists(databaseName);
-		} catch (SQLException e1) {
+            dropIfExists = DBExists(databaseName);
+        } catch (SQLException e1) {
 
-			e1.printStackTrace();
-		}
+            e1.printStackTrace();
+        }
         if (dropIfExists) {
             query = "Drop Database " + databaseName;
-            query= query.toLowerCase();
+            query = query.toLowerCase();
             try {
                 executeStructureQuery(query);
             } catch (SQLException e) {
@@ -50,7 +46,7 @@ public class DBMS implements Database {
 
         }
         query = "Create Database " + databaseName;
-        query= query.toLowerCase();
+        query = query.toLowerCase();
 
         try {
             createFlag = executeStructureQuery(query);
@@ -58,99 +54,97 @@ public class DBMS implements Database {
             e.printStackTrace();
         }
         if (createFlag) {
-            return databases.get(databases.size()-1).getPath();
+            return databases.get(databases.size() - 1).getPath();
         }
         return null;
     }
 
     public boolean executeStructureQuery(String query) throws java.sql.SQLException {
-        query= query.toLowerCase();
-        if (!Validator.ValidStructure(query)) {
+        query = query.toLowerCase();
+        int operation = Validator.validStructure(query);
+        if (operation < 0) {
             throw new SQLException("Invalid query");
         }
-        String LQuery = query.toLowerCase();
         DataCarrier carrier;
-
-        if (LQuery.contains("create ")) {
-            if (LQuery.contains("database")) {
-                carrier = DataExtractor.getInstance().createDBData(query);
-                addDatabase(carrier.DBName);
-                return true;
-            }
-            if (LQuery.contains("table")) {
-                if (databases.isEmpty()) {
-                    throw new SQLException("there is no databases");
-                }
-                DB activeDB = databases.get(databases.size() - 1);
-                carrier = DataExtractor.getInstance().createTableData(query);
-                return activeDB.addTable(carrier);
-            }
+        if (operation == 1) {
+            carrier = DataExtractor.getInstance().createDBData(query);
+            addDatabase(carrier.DBName);
+            return true;
         }
-        if (LQuery.contains("drop")) {
 
-            if (LQuery.contains("database")) {
-                carrier = DataExtractor.getInstance().dropDBData(query);
-                return dropDatabase(carrier);
+        if (operation == 2) {
+            if (databases.isEmpty()) {
+                throw new SQLException("there is no databases");
             }
-            if (LQuery.contains("table")) {
-                if (databases.isEmpty()) {
-                    throw new SQLException("there is no databases");
-                }
-                DB activeDB = databases.get(databases.size() - 1);
-                carrier = DataExtractor.getInstance().dropTableData(query);
-                return activeDB.deleteTable(carrier);
+            DB activeDB = databases.get(databases.size() - 1);
+            carrier = DataExtractor.getInstance().createTableData(query);
+            return activeDB.addTable(carrier);
+        }
+
+        if (operation == 3) {
+
+            carrier = DataExtractor.getInstance().dropDBData(query);
+            return dropDatabase(carrier);
+        }
+        if (operation == 4) {
+            if (databases.isEmpty()) {
+                throw new SQLException("there is no databases");
             }
+            DB activeDB = databases.get(databases.size() - 1);
+            carrier = DataExtractor.getInstance().dropTableData(query);
+            return activeDB.deleteTable(carrier);
+
         }
         return false;
     }
 
     public Object[][] executeQuery(String query) throws java.sql.SQLException {
-        query= query.toLowerCase();
+        query = query.toLowerCase();
         DataCarrier carrier;
-        String LQuery = query.toLowerCase();
-        if (!Validator.ValidReadQuery(query)) {
+        int operation = Validator.validReadQuery(query);
+        if (operation < 0) {
             throw new SQLException("Invalid query");
         }
         if (databases.isEmpty()) {
             return null;
         }
         DB activeDB = databases.get(databases.size() - 1);
-        if (LQuery.contains("*") && !LQuery.contains("where")) {
+        if (operation == 5) {
             carrier = DataExtractor.getInstance().selectAllData(query);
             if (!activeDB.tableExist(carrier.tableName)) {
                 throw new SQLException("Table " + carrier.tableName + " does not exists in " + activeDB.getName());
             }
-            if(activeDB.getTableIndex(carrier.tableName)==-1){
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
                 throw new SQLException("No such a table");
             }
             return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).selectAll();
 
-        } else if (LQuery.contains("*") && LQuery.contains("where")) {
+        } else if (operation == 6) {
             carrier = DataExtractor.getInstance().selectAllWhereData(query);
             if (!activeDB.tableExist(carrier.tableName)) {
                 throw new SQLException("Table " + carrier.tableName + " does not exists in " + activeDB.getName());
             }
-            if(activeDB.getTableIndex(carrier.tableName)==-1){
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
                 throw new SQLException("No such a table");
             }
             return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).selectAllWhere(carrier);
 
-        } else if (!LQuery.contains("*") && !LQuery.contains("where")) {
+        } else if (operation == 7) {
             carrier = DataExtractor.getInstance().selectSomeData(query);
             if (!activeDB.tableExist(carrier.tableName)) {
                 throw new SQLException("Table " + carrier.tableName + " does not exists in " + activeDB.getName());
             }
-            if(activeDB.getTableIndex(carrier.tableName)==-1){
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
                 throw new SQLException("No such a table");
             }
             return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).selectSome(carrier);
 
-        } else if (!LQuery.contains("*") && LQuery.contains("where")) {
+        } else if (operation == 8) {
             carrier = DataExtractor.getInstance().selectSomeWhereData(query);
             if (!activeDB.tableExist(carrier.tableName)) {
                 throw new SQLException("Table " + carrier.tableName + " does not exists in " + activeDB.getName());
             }
-            if(activeDB.getTableIndex(carrier.tableName)==-1){
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
                 throw new SQLException("No such a table");
             }
             return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).selectSomeWhere(carrier);
@@ -159,63 +153,62 @@ public class DBMS implements Database {
     }
 
     public int executeUpdateQuery(String query) throws java.sql.SQLException {
-        query= query.toLowerCase();
-        if (!Validator.ValidUpdateQuery(query)) {
+        query = query.toLowerCase();
+        int operation = Validator.validUpdateQuery(query);
+        if (operation < 0) {
             throw new SQLException("Invalid query");
         }
         DataCarrier carrier;
-        String LQuery = query.toLowerCase();
         if (databases.isEmpty()) {
             return 0;
         }
         DB activeDB = databases.get(databases.size() - 1);
-        if (LQuery.contains("insert")) {
-            if (LQuery.split("values")[0].contains("(")) {
-                carrier = DataExtractor.getInstance().insertSomeData(query);
-                if(activeDB.getTableIndex(carrier.tableName)==-1){
-                    throw new SQLException("No such a table");
-                }
-                return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).insertSome(carrier);
-            } else {
-                carrier = DataExtractor.getInstance().insertAllData(query);
-                if(activeDB.getTableIndex(carrier.tableName)==-1){
-                    throw new SQLException("No such a table");
-                }
-                return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).insertAll(carrier);
+        if (operation == 11) {
+            carrier = DataExtractor.getInstance().insertSomeData(query);
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
+                throw new SQLException("No such a table");
+            }
+            return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).insertSome(carrier);
+        }
+        if (operation == 12) {
+            carrier = DataExtractor.getInstance().insertAllData(query);
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
+                throw new SQLException("No such a table");
+            }
+            return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).insertAll(carrier);
 
-            }
         }
-        if (LQuery.contains("update")) {
-            if (LQuery.contains("where")) {
-                carrier = DataExtractor.getInstance().updateWhereData(query);
-                if(activeDB.getTableIndex(carrier.tableName)==-1){
-                    throw new SQLException("No such a table");
-                }
-                return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).updateWhere(carrier);
-            } else {
-                carrier = DataExtractor.getInstance().updateData(query);
-                if(activeDB.getTableIndex(carrier.tableName)==-1){
-                    throw new SQLException("No such a table");
-                }
-                return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).update(carrier);
 
+        if (operation == 14) {
+            carrier = DataExtractor.getInstance().updateWhereData(query);
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
+                throw new SQLException("No such a table");
             }
+            return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).updateWhere(carrier);
         }
-        if (LQuery.contains("delete")) {
-            if (LQuery.contains("where")) {
-                carrier = DataExtractor.getInstance().deleteSomeData(query);
-                if(activeDB.getTableIndex(carrier.tableName)==-1){
-                    throw new SQLException("No such a table");
-                }
-                return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).deleteWhere(carrier);
-            } else {
-                carrier = DataExtractor.getInstance().deleteAllData(query);
-                if(activeDB.getTableIndex(carrier.tableName)==-1){
-                    throw new SQLException("No such a table");
-                }
-                return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).deleteAll();
+        if (operation == 13) {
+            carrier = DataExtractor.getInstance().updateData(query);
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
+                throw new SQLException("No such a table");
             }
+            return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).update(carrier);
+
         }
+        if (operation == 10) {
+            carrier = DataExtractor.getInstance().deleteSomeData(query);
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
+                throw new SQLException("No such a table");
+            }
+            return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).deleteWhere(carrier);
+        }
+        if (operation == 9) {
+            carrier = DataExtractor.getInstance().deleteAllData(query);
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
+                throw new SQLException("No such a table");
+            }
+            return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).deleteAll();
+        }
+
         return 0;
     }
 
@@ -237,12 +230,13 @@ public class DBMS implements Database {
         databases.remove(index);
         return true;
     }
-    private void deleteFile(File f){
-        if(f.delete())
+
+    private void deleteFile(File f) {
+        if (f.delete())
             return;
-        File[] list= f.listFiles();
-        if (list!=null){
-            for (File inside:list
+        File[] list = f.listFiles();
+        if (list != null) {
+            for (File inside : list
             ) {
                 deleteFile(inside);
             }
@@ -253,14 +247,14 @@ public class DBMS implements Database {
     private void addDatabase(String name) throws SQLException {
         databases.add(new DB(name, workspace));
     }
-    
+
     private boolean DBExists(String name) throws SQLException {
-    	for (int i = 0; i < databases.size(); i++) {
+        for (int i = 0; i < databases.size(); i++) {
             if (databases.get(i).getName().equalsIgnoreCase(name)) {
                 return true;
             }
         }
-    	return false;
+        return false;
     }
 
 }
