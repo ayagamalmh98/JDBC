@@ -27,6 +27,12 @@ public class DBMS implements Database {
         databaseName = databaseName.split(Pattern.quote("\\"))[databaseName.split(Pattern.quote("\\")).length - 1];
         String query;
         boolean createFlag = true;
+        try {
+			dropIfExists = DBExists(databaseName);
+		} catch (SQLException e1) {
+
+			e1.printStackTrace();
+		}
         if (dropIfExists) {
             query = "Drop Database " + databaseName;
             query= query.toLowerCase();
@@ -240,6 +246,15 @@ public class DBMS implements Database {
 
     private void addDatabase(String name) throws SQLException {
         databases.add(new DB(name, workspace));
+    }
+    
+    private boolean DBExists(String name) throws SQLException {
+    	for (int i = 0; i < databases.size(); i++) {
+            if (databases.get(i).getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+    	return false;
     }
 
 }
