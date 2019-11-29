@@ -28,7 +28,7 @@ public class DBMSController {
 
 	public String invoke(String query) throws SQLException {
 		String[] splitted = query.trim().split("\\s+");
-		switch (getFirstWord(query)) {
+		switch (splitted[0]) {
 		case "CREATE":
 			String testD = null;
 			boolean testT = false;
