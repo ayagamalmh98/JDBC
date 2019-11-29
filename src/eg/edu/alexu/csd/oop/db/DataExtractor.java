@@ -13,6 +13,21 @@ import static eg.edu.alexu.csd.oop.db.QueryValidator.*;
 
     }
 
+  private String selectAllPattern = "(\\A)(?i)(\\s*)(select)(\\s*)[*](\\s*)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+	private String selectAllWherePattern = "(\\A)(?i)(\\s*)(select)(\\s*)[*](\\s*)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
+	private String selectSomePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+	private String selectSomeWherePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
+	private String createDBPattern = "(\\A)(?i)(\\s*)(create)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+	private String createTablePattern = "(\\A)(?i)(\\s*)(create)(\\s+)(table)(\\s+)(\\w+)(\\s*)[(](((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)))[)](\\s*)(?-i)(\\z)";
+	private String dropDBPattern = "(\\A)(?i)(\\s*)(drop)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+	private String dropTablePattern = "(\\A)(?i)(\\s*)(drop)(\\s+)(table)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+	private String insertSomePattern = "(\\A)(?i)(\\s*)(insert)(\\s+)(into)(\\s+)(\\w+)(\\s*)([(](((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))[)])(\\s*)(values)(\\s*)[(]((\\s*)(((\\s*)[']([^'])*['](\\s*)[,](\\s*))|((\\s*)([0-9])+(\\s*)[,](\\s*)))*(((\\s*)[']([^'])*['](\\s*))|((\\s*)([0-9])+(\\s*))))[)](\\s*)(?-i)(\\z)";
+	private String insertAllPattern = "(\\A)(?i)(\\s*)(insert)(\\s+)(into)(\\s+)(\\w+)(\\s*)(values)(\\s*)[(]((\\s*)(((\\s*)[']([^'])*['](\\s*)[,](\\s*))|((\\s*)([0-9])+(\\s*)[,](\\s*)))*(((\\s*)[']([^'])*['](\\s*))|((\\s*)([0-9])+(\\s*))))[)](\\s*)(?-i)(\\z)";
+	private String deleteAllPattern = "(\\A)(?i)(\\s*)(delete)(\\s+)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+	private String deleteSomePattern = "(\\A)(?i)(\\s*)(delete)(\\s+)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
+	private String updatePattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s*)(?-i)(\\z)";
+	private String updateWherePattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
+
      static DataExtractor getInstance() {
         return instance;
     }
