@@ -30,13 +30,13 @@ public class DBMSController {
 		String[] splitted = query.trim().split("\\s+");
 		switch (splitted[0].toUpperCase()) {
 		case "CREATE":
-			boolean testD =false;
+			boolean testD = false;
 			boolean testT = false;
-			if(splitted[1].equalsIgnoreCase("database"))
-				testD= manager.executeStructureQuery(query);
-			else if(splitted[1].equalsIgnoreCase("table"))
+			if (splitted[1].equalsIgnoreCase("database"))
+				testD = manager.executeStructureQuery(query);
+			else if (splitted[1].equalsIgnoreCase("table"))
 				testT = manager.executeStructureQuery(query);
-			if (testD  || testT) {
+			if (testD || testT) {
 				return new String(splitted[1] + " Created Successfully.");
 			} else {
 				return new String(splitted[1] + " wasn't Created Successfully.");
@@ -55,18 +55,23 @@ public class DBMSController {
 				return "wrong Selection!!";
 			} else {
 				StringBuilder st = new StringBuilder();
-	        	for(int i = 0 ; i < test2.length ; i ++) {
-	        		for(int j = 0 ; j < test2[0].length ; j++) {
-	        			st.append(test2[i][j].toString() + " ");
-	        		}
-	        		st.append("\n");
-	        	}
-	        	return st.toString();
+				for (int i = 0; i < test2.length; i++) {
+					for (int j = 0; j < test2[0].length; j++) {
+						st.append(test2[i][j].toString() + " ");
+					}
+					st.append("\n");
+				}
+				return st.toString();
 			}
 		case "INSERT":
 		case "DELETE":
 		case "UPDATE":
-			return manager.executeUpdateQuery(query) + " row has been Updated.";
+			int test3 = manager.executeUpdateQuery(query);
+			if (test3 == 0) {
+				return "table hasn't been Updated.";
+			} else {
+				return manager.executeUpdateQuery(query) + " table has been Updated.";
+			}
 		default:
 			throw new RuntimeException("Not a valid SQL query!");
 		}
