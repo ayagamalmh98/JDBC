@@ -58,6 +58,10 @@ public class DBMS implements Database {
     }
 
     public boolean executeStructureQuery(String query) throws java.sql.SQLException {
+	     if (new ValidStructure().isValid(query)) {
+            throw new SQLException("Invalid query");
+
+        }
     	query= query.toLowerCase();
         String LQuery = query.toLowerCase();
         DataCarrier carrier;
@@ -96,6 +100,10 @@ public class DBMS implements Database {
     }
 
     public Object[][] executeQuery(String query) throws java.sql.SQLException {
+	     if (new ValidReadQuery().isValid(query)) {
+            throw new SQLException("Invalid query");
+
+        }
         query= query.toLowerCase();
         DataCarrier carrier;
         String LQuery = query.toLowerCase();
@@ -147,6 +155,10 @@ public class DBMS implements Database {
     }
 
     public int executeUpdateQuery(String query) throws java.sql.SQLException {
+	     if (new ValidUpdateQuery().isValid(query)) {
+            throw new SQLException("Invalid query");
+
+        }
     	query= query.toLowerCase();
        
         DataCarrier carrier;
