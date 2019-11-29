@@ -27,9 +27,9 @@ public class DBMSController {
 	}
 
 	public String invoke(String query) throws SQLException {
+		query = query.toLowerCase();
 		String[] splitted = query.trim().split("\\s+");
-		switch (splitted[0].toUpperCase()) {
-		case "CREATE":
+		if (query.contains("create")) {
 			boolean test = manager.executeStructureQuery(query);
 			if (test) {
 				return new String(splitted[1] + " Created Successfully.");
@@ -37,14 +37,13 @@ public class DBMSController {
 				return new String(splitted[1] + " wasn't Created Successfully.");
 
 			}
-		case "USE":
-		case "DROP":
+		} else if (query.contains("use") || query.contains("drop")) {
 			boolean test1 = manager.executeStructureQuery(query);
 			if (test1)
 				return new String(splitted[1] + " Dropped Successfully.");
 			else
 				return new String(splitted[1] + " Wasn't Dropped Successfully.");
-		case "SELECT":
+		} else if (query.contains("select")) {
 			Object[][] test2 = manager.executeQuery(query);
 			if (test2 == null) {
 				return "wrong Selection!!";
@@ -58,27 +57,17 @@ public class DBMSController {
 				}
 				return st.toString();
 			}
-		case "INSERT":
-		case "DELETE":
-		case "UPDATE":
+		} else if (query.contains("insert") || query.contains("delete") || query.contains("update")) {
 			int test3 = manager.executeUpdateQuery(query);
 			if (test3 == 0) {
 				return "rows hasn't been Updated.";
 			} else {
 				return manager.executeUpdateQuery(query) + " rows has been Updated.";
 			}
-		default:
-			throw new RuntimeException("Not a valid SQL query!");
+		} else {
+			throw new SQLException("Not a valid SQL query!");
 		}
 	}
 
-	private String getFirstWord(String query) {
-		Pattern firstWord = Pattern.compile("(\\s*)([A-Za-z]+)(\\s+)");
-		Matcher firstWordMatcher = firstWord.matcher(query);
-		if (firstWordMatcher.matches() && firstWordMatcher.group(2) != null) {
-			return firstWordMatcher.group(2).toUpperCase();
-		}
-		return "";
-	}
-
+	
 }
