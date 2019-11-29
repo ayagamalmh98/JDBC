@@ -63,9 +63,9 @@ public class DBMSController {
 		case "UPDATE":
 			int test3 = manager.executeUpdateQuery(query);
 			if (test3 == 0) {
-				return "table hasn't been Updated.";
+				return "rows hasn't been Updated.";
 			} else {
-				return manager.executeUpdateQuery(query) + " table has been Updated.";
+				return manager.executeUpdateQuery(query) + " rows has been Updated.";
 			}
 		default:
 			throw new RuntimeException("Not a valid SQL query!");
