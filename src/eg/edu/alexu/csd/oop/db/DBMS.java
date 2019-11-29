@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import eg.edu.alexu.csd.oop.db.parser.Parser;
 import eg.edu.alexu.csd.oop.db.parser.ValidReadQuery;
 import eg.edu.alexu.csd.oop.db.parser.ValidStructure;
 import eg.edu.alexu.csd.oop.db.parser.ValidUpdateQuery;
@@ -13,12 +14,16 @@ public class DBMS implements Database {
 
     private File workspace;
     private ArrayList<DB> databases;
+    private Parser ValidReadQuery;
+    private Parser ValidStructure;
+    private Parser ValidUpdateQuery;
 
-
-     DBMS()  {
+    public DBMS()  {
         databases = new ArrayList<>();
         workspace = new File("workspace");
-        
+        ValidReadQuery = new ValidReadQuery();
+        ValidStructure = new ValidStructure();
+        ValidUpdateQuery =new ValidUpdateQuery();
         if (!workspace.mkdir()) {
             deleteFile(workspace);
             workspace = new File("workspace");
@@ -63,7 +68,7 @@ public class DBMS implements Database {
 
     public boolean executeStructureQuery(String query) throws java.sql.SQLException {
         query= query.toLowerCase();
-        if (!new ValidStructure().isValid(query)) {
+        if (!ValidStructure.isValid(query)) {
             throw new SQLException("Invalid query");
         }
         String LQuery = query.toLowerCase();
@@ -106,7 +111,7 @@ public class DBMS implements Database {
         query= query.toLowerCase();
         DataCarrier carrier;
         String LQuery = query.toLowerCase();
-        if (!new ValidReadQuery().isValid(query)) {
+        if (!ValidReadQuery.isValid(query)) {
             throw new SQLException("Invalid query");
         }
         if (databases.isEmpty()) {
@@ -158,7 +163,7 @@ public class DBMS implements Database {
 
     public int executeUpdateQuery(String query) throws java.sql.SQLException {
         query= query.toLowerCase();
-        if (!new ValidUpdateQuery().isValid(query)) {
+        if (!ValidUpdateQuery.isValid(query)) {
             throw new SQLException("Invalid query");
         }
         DataCarrier carrier;
