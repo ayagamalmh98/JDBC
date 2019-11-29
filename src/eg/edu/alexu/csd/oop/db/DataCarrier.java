@@ -1,16 +1,16 @@
 package eg.edu.alexu.csd.oop.db;
 
-public class DataCarrier {
-    public DataCarrier() {
+ class DataCarrier {
+     DataCarrier() {
     }
 
-    public String DBName;
-    public String tableName;
-    public String conditionColumn;
-    public String conditionValue;
-    public char conditionOperator;
-    public String[] columns;
-    public String[] columnsTypes;
-    public String[] values;
+     String DBName;
+     String tableName;
+     String conditionColumn;
+     String conditionValue;
+     char conditionOperator;
+     String[] columns;
+     String[] columnsTypes;
+     String[] values;
 
 }

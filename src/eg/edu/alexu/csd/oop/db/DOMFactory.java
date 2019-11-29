@@ -18,9 +18,10 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
-public class DOMFactory {
-    public static Document getDomObj(File inputFile) {
+ class DOMFactory {
+     static Document getDomObj(File inputFile)throws SQLException {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -29,10 +30,11 @@ public class DOMFactory {
             return doc;
 
         } catch (IOException | ParserConfigurationException | SAXException e) {
+            throw new SQLException("Error loading file");
         }
-        return null;
     }
-    public static void writeDOMtoFile(Document doc,File outputFile){
+
+    static void writeDOMtoFile(Document doc, File outputFile) throws SQLException {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -41,12 +43,13 @@ public class DOMFactory {
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(outputFile);
             transformer.transform(source, result);
-        }catch (TransformerException e){
-
+        } catch (TransformerException e) {
+            throw new SQLException("Error writing to data file");
         }
 
     }
-    public static boolean validateXML(Document doc,File schemaFile){
+
+    static boolean validateXML(Document doc, File schemaFile) {
         Schema schema = null;
         try {
             String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
@@ -56,9 +59,14 @@ public class DOMFactory {
             e.printStackTrace();
         }
         try {
-            Validator validator = schema.newValidator();
-            validator.validate(new DOMSource(doc));
-        }catch (Exception e){
+            if (schema != null) {
+                Validator validator = schema.newValidator();
+                validator.validate(new DOMSource(doc));
+
+            }else {
+                throw new SQLException("Error loading schema file");
+            }
+        } catch (Exception e) {
             return false;
         }
         return true;

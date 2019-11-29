@@ -17,12 +17,12 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.sql.SQLException;
 
-public class SchemaGenerator {
+ class SchemaGenerator {
 
     private static File schemaFile;
     private static SchemaGenerator instance = new SchemaGenerator();
 
-    public static SchemaGenerator getInstance(File schema) {
+     static SchemaGenerator getInstance(File schema) {
         schemaFile = schema;
         return instance;
     }
@@ -31,7 +31,7 @@ public class SchemaGenerator {
 
     }
 
-     File createSchema(DataCarrier carrier) throws SQLException {
+    File createSchema(DataCarrier carrier) throws SQLException {
 
         try {
             final String NS_PREFIX = "xs:";
@@ -55,12 +55,12 @@ public class SchemaGenerator {
             tableSequence.appendChild(rowElement);
             rowElement.setAttribute("maxOccurs", "unbounded");
             rowElement.setAttribute("minOccurs", "0");
-            tableName.setAttribute("use","required");
+            tableName.setAttribute("use", "required");
             rowElement.appendChild(rowType);
             rowType.appendChild(rowSequence);
             for (int i = 0; i < carrier.columns.length; i++) {
                 Element element = elMaker.createElement("attribute", carrier.columns[i], carrier.columnsTypes[i]);
-                element.setAttribute("use","required");
+                element.setAttribute("use", "required");
                 rowType.appendChild(element);
             }
             TransformerFactory tFactory = TransformerFactory.newInstance();
@@ -102,6 +102,7 @@ public class SchemaGenerator {
         private Element createElement(String elementName) {
             return createElement(elementName, null, null);
         }
+
 
     }
 }

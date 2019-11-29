@@ -6,18 +6,18 @@ import java.util.regex.Pattern;
 import static eg.edu.alexu.csd.oop.db.QueryValidator.*;
 
 
-public class DataExtractor {
+ class DataExtractor {
 
     private static DataExtractor instance = new DataExtractor();
     private DataExtractor(){
 
     }
 
-    public static DataExtractor getInstance() {
+     static DataExtractor getInstance() {
         return instance;
     }
 
-    public DataCarrier createTableData(String query) {
+     DataCarrier createTableData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(createTablePattern);
         Matcher mat = pat.matcher(query);
@@ -31,7 +31,7 @@ public class DataExtractor {
             for (int i = 0; i < data.length; i++) {
                 isolateMatcher = isolateTwoWords.matcher(data[i]);
                 if (isolateMatcher.matches()) {
-                    toBeReturn.columns[i] = isolateMatcher.group(1);
+                    toBeReturn.columns[i] = isolateMatcher.group(1).toLowerCase();
                     toBeReturn.columnsTypes[i] = isolateMatcher.group(2).equalsIgnoreCase("varchar") ? "string" : "int";
                 }
             }
@@ -40,7 +40,7 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier insertSomeData(String query) throws SQLException {
+     DataCarrier insertSomeData(String query) throws SQLException {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(insertSomePattern);
         Matcher mat = pat.matcher(query);
@@ -60,13 +60,13 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier createDBData(String query){
+     DataCarrier createDBData(String query){
         return DBData(query,createDBPattern);
     }
-    public DataCarrier dropDBData(String query){
+     DataCarrier dropDBData(String query){
         return DBData(query,dropDBPattern);
     }
-    public DataCarrier dropTableData(String query){
+     DataCarrier dropTableData(String query){
         return dropDeleteTable(query, dropTablePattern);
     }
     private DataCarrier DBData(String query,String pattern){
@@ -80,7 +80,7 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier insertAllData(String query) {
+     DataCarrier insertAllData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(insertAllPattern);
         Matcher mat = pat.matcher(query);
@@ -94,7 +94,7 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier deleteAllData(String query) {
+     DataCarrier deleteAllData(String query) {
         return dropDeleteTable(query, deleteAllPattern);
     }
 
@@ -109,13 +109,13 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier deleteSomeData(String query) {
+     DataCarrier deleteSomeData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(deleteSomePattern);
         Matcher mat = pat.matcher(query);
         if (mat.matches()) {
             toBeReturn.tableName = mat.group(7);
-            toBeReturn.conditionColumn = mat.group(11);
+            toBeReturn.conditionColumn = mat.group(11).toLowerCase();
             toBeReturn.conditionValue = mat.group(15);
             if (toBeReturn.conditionValue.charAt(0) == '\'') {
                 toBeReturn.conditionValue = toBeReturn.conditionValue.substring(1, toBeReturn.conditionValue.length() - 1);
@@ -126,7 +126,7 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier selectAllData(String query) {
+     DataCarrier selectAllData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(selectAllPattern);
         Matcher mat = pat.matcher(query);
@@ -137,13 +137,13 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier selectAllWhereData(String query) {
+     DataCarrier selectAllWhereData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(selectAllWherePattern);
         Matcher mat = pat.matcher(query);
         if (mat.matches()) {
             toBeReturn.tableName = mat.group(8);
-            toBeReturn.conditionColumn = mat.group(12);
+            toBeReturn.conditionColumn = mat.group(12).toLowerCase();
             toBeReturn.conditionValue = mat.group(16);
             if (toBeReturn.conditionValue.charAt(0) == '\'') {
                 toBeReturn.conditionValue = toBeReturn.conditionValue.substring(1, toBeReturn.conditionValue.length() - 1);
@@ -154,7 +154,7 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier selectSomeData(String query) {
+     DataCarrier selectSomeData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(selectSomePattern);
         Matcher mat = pat.matcher(query);
@@ -167,13 +167,13 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier selectSomeWhereData(String query) {
+     DataCarrier selectSomeWhereData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(selectSomeWherePattern);
         Matcher mat = pat.matcher(query);
         if (mat.matches()) {
             toBeReturn.tableName = mat.group(18);
-            toBeReturn.conditionColumn = mat.group(22);
+            toBeReturn.conditionColumn = mat.group(22).toLowerCase();
             toBeReturn.conditionValue = mat.group(26);
             if (toBeReturn.conditionValue.charAt(0) == '\'') {
                 toBeReturn.conditionValue = toBeReturn.conditionValue.substring(1, toBeReturn.conditionValue.length() - 1);
@@ -202,9 +202,9 @@ public class DataExtractor {
         fillValues(toBeReturn, valuesData);
     }
 
-    public DataCarrier updateAllData(String query) {
+     DataCarrier updateData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
-        Pattern pat = Pattern.compile(updateAllPattern);
+        Pattern pat = Pattern.compile(updatePattern);
         Matcher mat = pat.matcher(query);
         if (mat.matches()) {
             updateData(toBeReturn, mat);
@@ -213,13 +213,13 @@ public class DataExtractor {
         return null;
     }
 
-    public DataCarrier updateSomeData(String query) {
+     DataCarrier updateWhereData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
-        Pattern pat = Pattern.compile(updateSomePattern);
+        Pattern pat = Pattern.compile(updateWherePattern);
         Matcher mat = pat.matcher(query);
         if (mat.matches()) {
             updateData(toBeReturn, mat);
-            toBeReturn.conditionColumn = mat.group(32);
+            toBeReturn.conditionColumn = mat.group(32).toLowerCase();
             toBeReturn.conditionValue = mat.group(36);
             if (toBeReturn.conditionValue.charAt(0) == '\'') {
                 toBeReturn.conditionValue = toBeReturn.conditionValue.substring(1, toBeReturn.conditionValue.length() - 1);
@@ -238,7 +238,7 @@ public class DataExtractor {
         for (int i = 0; i < data.length; i++) {
             matcher = wordWithoutSingleQuotes.matcher(data[i]);
             if (matcher.matches()) {
-                toBeReturn.columns[i] = matcher.group(1);
+                toBeReturn.columns[i] = matcher.group(1).toLowerCase();
             }
         }
     }

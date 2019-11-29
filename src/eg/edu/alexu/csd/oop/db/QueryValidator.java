@@ -1,7 +1,5 @@
 package eg.edu.alexu.csd.oop.db;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,8 +19,8 @@ public class QueryValidator {
      static final String selectAllWherePattern;
      static final String selectSomePattern;
      static final String selectSomeWherePattern;
-     static final String updateAllPattern;
-     static final String updateSomePattern;
+     static final String updatePattern;
+     static final String updateWherePattern;
 
     static {
         createDBPattern = "(\\A)(?i)(\\s*)(create)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
@@ -37,8 +35,8 @@ public class QueryValidator {
         selectAllWherePattern = "(\\A)(?i)(\\s*)(select)(\\s*)[*](\\s*)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
         selectSomePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
         selectSomeWherePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
-        updateAllPattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s*)(?-i)(\\z)";
-        updateSomePattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
+        updatePattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s*)(?-i)(\\z)";
+        updateWherePattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
 
     }
     private QueryValidator() {
@@ -46,19 +44,19 @@ public class QueryValidator {
 
     }
 
-    public static QueryValidator getInstance() {
+     static QueryValidator getInstance() {
         return instance;
     }
 
-    public boolean isValidStructureQuery(String query) {
+     boolean isValidStructureQuery(String query) {
         return createIsValid(query) || dropIsValid(query);
     }
 
-    public boolean isValidReadQuery(String query) {
+     boolean isValidReadQuery(String query) {
         return selectIsValid(query);
     }
 
-    public boolean isValidUpdateQuery(String query) {
+     boolean isValidUpdateQuery(String query) {
         return insertIsValid(query) || deleteIsValid(query) || updateIsValid(query);
     }
 
@@ -84,7 +82,7 @@ public class QueryValidator {
     }
 
     private boolean updateIsValid(String query) {
-        return regexMatcher(query, updateAllPattern) || regexMatcher(query, updateSomePattern);
+        return regexMatcher(query, updatePattern) || regexMatcher(query, updateWherePattern);
     }
 
     private boolean regexMatcher(String input, String pattern) {
