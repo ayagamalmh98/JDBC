@@ -36,57 +36,56 @@ public class DBMSController {
 		switch (splitted[0].toUpperCase()) {
 
 		case "CREATE":
-			if (new ValidStructure().isValid(query)) {
-				String testD = null;
-				boolean testT = false;
-				if (splitted[1].equalsIgnoreCase("database"))
-					testD = manager.createDatabase(query, false);
-				else if (splitted[1].equalsIgnoreCase("table"))
-					testT = manager.executeStructureQuery(query);
-				if (testD == null || !testT) {
-					return new String(splitted[1] + " wasn't Created Successfully.");
-				} else {
-					return new String(splitted[1] + " Created Successfully.");
-				}
+
+			String testD = null;
+			boolean testT = false;
+			if (splitted[1].equalsIgnoreCase("database"))
+				testD = manager.createDatabase(query, false);
+			else if (splitted[1].equalsIgnoreCase("table"))
+				testT = manager.executeStructureQuery(query);
+			if (testD == null || !testT) {
+				return new String(splitted[1] + " wasn't Created Successfully.");
+			} else {
+				return new String(splitted[1] + " Created Successfully.");
 			}
+
 		case "USE":
 		case "DROP":
-			if (new ValidStructure().isValid(query)) {
-				boolean test1 = manager.executeStructureQuery(query);
-				if (test1)
-					return new String(splitted[1] + " Dropped Successfully.");
-				else
-					return new String(splitted[1] + " Wasn't Dropped Successfully.");
-			}
+			boolean test1 = manager.executeStructureQuery(query);
+			if (test1)
+				return new String(splitted[1] + " Dropped Successfully.");
+			else
+				return new String(splitted[1] + " Wasn't Dropped Successfully.");
+
 		case "SELECT":
-			if (new ValidReadQuery().isValid(query)) {
-				Object[][] test2 = manager.executeQuery(query);
-				if (test2 == null) {
-					return "wrong Selection!!";
-				} else {
-					StringBuilder st = new StringBuilder();
-					for (int i = 0; i < test2.length; i++) {
-						for (int j = 0; j < test2[0].length; j++) {
-							st.append(test2[i][j].toString() + " ");
-						}
-						st.append("\n");
+
+			Object[][] test2 = manager.executeQuery(query);
+			if (test2 == null) {
+				return "wrong Selection!!";
+			} else {
+				StringBuilder st = new StringBuilder();
+				for (int i = 0; i < test2.length; i++) {
+					for (int j = 0; j < test2[0].length; j++) {
+						st.append(test2[i][j].toString() + " ");
 					}
-					return st.toString();
+					st.append("\n");
 				}
+				return st.toString();
 			}
+
 		case "INSERT":
 		case "DELETE":
 		case "UPDATE":
-			if (new ValidUpdateQuery().isValid(query)) {
-				int test3 = manager.executeUpdateQuery(query);
-				if((Integer)test3 == null) {
-					return "Table hasn't been Updated.";
-				}else {
+
+			int test3 = manager.executeUpdateQuery(query);
+			if ((Integer) test3 == null) {
+				return "Table hasn't been Updated.";
+			} else {
 				return test3 + " Table has been Updated.";
-				}
 			}
+
 		default:
-			return"Not a valid SQL query!";
+			return "Not a valid SQL query!";
 		}
 	}
 
