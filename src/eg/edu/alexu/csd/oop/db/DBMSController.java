@@ -29,7 +29,7 @@ public class DBMSController {
 	public String invoke(String query) throws SQLException {
 		query = query.toLowerCase();
 		String[] splitted = query.trim().split("\\s+");
-		if (query.contains("create")) {
+		if (splitted[0].contains("create")) {
 			boolean test = manager.executeStructureQuery(query);
 			if (test) {
 				return new String(splitted[1] + " Created Successfully.");
@@ -37,13 +37,13 @@ public class DBMSController {
 				return new String(splitted[1] + " wasn't Created Successfully.");
 
 			}
-		} else if (query.contains("use") || query.contains("drop")) {
+		} else if (splitted[0].contains("use") || splitted[0].contains("drop")) {
 			boolean test1 = manager.executeStructureQuery(query);
 			if (test1)
 				return new String(splitted[1] + " Dropped Successfully.");
 			else
 				return new String(splitted[1] + " Wasn't Dropped Successfully.");
-		} else if (query.contains("select")) {
+		} else if (splitted[0].contains("select")) {
 			Object[][] test2 = manager.executeQuery(query);
 			if (test2 == null) {
 				return "wrong Selection!!";
@@ -57,7 +57,7 @@ public class DBMSController {
 				}
 				return st.toString();
 			}
-		} else if (query.contains("insert") || query.contains("delete") || query.contains("update")) {
+		} else if (splitted[0].contains("insert") || splitted[0].contains("delete") || splitted[0].contains("update")) {
 			int test3 = manager.executeUpdateQuery(query);
 			if (test3 == 0) {
 				return "rows hasn't been Updated.";
