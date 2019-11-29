@@ -5,11 +5,6 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import eg.edu.alexu.csd.oop.db.parser.Parser;
-import eg.edu.alexu.csd.oop.db.parser.ValidReadQuery;
-import eg.edu.alexu.csd.oop.db.parser.ValidStructure;
-import eg.edu.alexu.csd.oop.db.parser.ValidUpdateQuery;
-
 public class DBMSController {
 	private DBMSController() throws SQLException {
 		manager = new DBMS();
@@ -34,21 +29,19 @@ public class DBMSController {
 	public String invoke(String query) throws SQLException {
 		String[] splitted = query.trim().split("\\s+");
 		switch (splitted[0].toUpperCase()) {
-
 		case "CREATE":
-
-			String testD = null;
+			boolean testD =false;
 			boolean testT = false;
-			if (splitted[1].equalsIgnoreCase("database"))
-				testD = manager.createDatabase(query, false);
-			else if (splitted[1].equalsIgnoreCase("table"))
+			if(splitted[1].equalsIgnoreCase("database"))
+				testD= manager.executeStructureQuery(query);
+			else if(splitted[1].equalsIgnoreCase("table"))
 				testT = manager.executeStructureQuery(query);
-			if (testD == null || !testT) {
-				return new String(splitted[1] + " wasn't Created Successfully.");
-			} else {
+			if (testD  || testT) {
 				return new String(splitted[1] + " Created Successfully.");
-			}
+			} else {
+				return new String(splitted[1] + " wasn't Created Successfully.");
 
+			}
 		case "USE":
 		case "DROP":
 			boolean test1 = manager.executeStructureQuery(query);
@@ -56,36 +49,26 @@ public class DBMSController {
 				return new String(splitted[1] + " Dropped Successfully.");
 			else
 				return new String(splitted[1] + " Wasn't Dropped Successfully.");
-
 		case "SELECT":
-
 			Object[][] test2 = manager.executeQuery(query);
 			if (test2 == null) {
 				return "wrong Selection!!";
 			} else {
 				StringBuilder st = new StringBuilder();
-				for (int i = 0; i < test2.length; i++) {
-					for (int j = 0; j < test2[0].length; j++) {
-						st.append(test2[i][j].toString() + " ");
-					}
-					st.append("\n");
-				}
-				return st.toString();
+	        	for(int i = 0 ; i < test2.length ; i ++) {
+	        		for(int j = 0 ; j < test2[0].length ; j++) {
+	        			st.append(test2[i][j].toString() + " ");
+	        		}
+	        		st.append("\n");
+	        	}
+	        	return st.toString();
 			}
-
 		case "INSERT":
 		case "DELETE":
 		case "UPDATE":
-
-			int test3 = manager.executeUpdateQuery(query);
-			if ((Integer) test3 == null) {
-				return "Table hasn't been Updated.";
-			} else {
-				return test3 + " Table has been Updated.";
-			}
-
+			return manager.executeUpdateQuery(query) + " row has been Updated.";
 		default:
-			return "Not a valid SQL query!";
+			throw new RuntimeException("Not a valid SQL query!");
 		}
 	}
 
