@@ -20,6 +20,32 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 public class ConnectionImp implements Connection{
+    private StatementImp statement;
+	public ConnectionImp(String url, String path) {
+		//set current database to the given path :"|
+	}
+	@Override
+	public void close() throws SQLException {
+		statement=null;
+		
+	}
+	@Override
+	public Statement createStatement() throws SQLException {
+		 statement = new StatementImp(this);
+	        return statement;
+	}
+
+	@Override
+	public Statement createStatement(int arg0, int arg1) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Statement createStatement(int arg0, int arg1, int arg2) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	
 
 	@Override
 	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
@@ -41,11 +67,7 @@ public class ConnectionImp implements Connection{
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void close() throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public void commit() throws SQLException {
@@ -77,21 +99,7 @@ public class ConnectionImp implements Connection{
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Statement createStatement() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Statement createStatement(int arg0, int arg1) throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Statement createStatement(int arg0, int arg1, int arg2) throws SQLException {
-		throw new UnsupportedOperationException();
-	}
+	
 
 	@Override
 	public Struct createStruct(String arg0, Object[] arg1) throws SQLException {
