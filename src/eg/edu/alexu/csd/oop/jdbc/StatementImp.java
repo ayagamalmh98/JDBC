@@ -5,8 +5,73 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.logging.Logger;
+
+import eg.edu.alexu.csd.oop.db.DBMSController;
 
 public class StatementImp implements Statement{
+	private ConnectionImp connection ;
+    private ResultSet resultSet;
+	private ArrayList<String> batches;
+	
+	private final static Logger logger = Logger.getLogger(StatementImp.class.getName());
+	
+	
+	public StatementImp(ConnectionImp con) {
+		this.connection=con;
+	}
+	@Override
+	public void addBatch(String arg0) throws SQLException {
+		batches.add(arg0);
+		
+	}
+
+	@Override
+	public void clearBatch() throws SQLException {
+		batches.clear();	
+		
+	}
+	@Override
+	public void close() throws SQLException {
+        connection = null;
+        batches = null;
+        resultSet=null;
+	}
+	@Override
+	public boolean execute(String arg0) throws SQLException {
+		DBMSController executor = DBMSController.getInstance();
+		executor.invoke(arg0);
+		//....
+		return false;
+	}
+
+	@Override
+	public ResultSet executeQuery(String arg0) throws SQLException {
+		
+		return null;
+	}
+	
+	@Override
+	public int executeUpdate(String arg0) throws SQLException {
+		
+		return 0;
+	}
+	@Override
+	public int[] executeBatch() throws SQLException {
+        int[] arr = new int[batches.size()];
+        for (int i = 0; i < batches.size(); i++) {
+            String query = batches.get(i);
+            if (execute(query)) arr[i] = SUCCESS_NO_INFO;
+            arr[i] = executeUpdate(query);
+        }
+        return arr;
+	}
+	
+	@Override
+	public Connection getConnection() throws SQLException {
+		return connection;
+	}
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
@@ -18,44 +83,29 @@ public class StatementImp implements Statement{
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void addBatch(String arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public void cancel() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void clearBatch() throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
+
+
+
 
 	@Override
 	public void clearWarnings() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void close() throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void closeOnCompletion() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public boolean execute(String arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
 
 	@Override
 	public boolean execute(String arg0, int arg1) throws SQLException {
@@ -72,23 +122,9 @@ public class StatementImp implements Statement{
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public int[] executeBatch() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public ResultSet executeQuery(String arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public int executeUpdate(String arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 
 	@Override
 	public int executeUpdate(String arg0, int arg1) throws SQLException {
@@ -105,11 +141,7 @@ public class StatementImp implements Statement{
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Connection getConnection() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public int getFetchDirection() throws SQLException {
