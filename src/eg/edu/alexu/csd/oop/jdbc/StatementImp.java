@@ -6,71 +6,105 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Logger;
+
 
 import eg.edu.alexu.csd.oop.db.DBMSController;
 
-public class StatementImp implements Statement{
-	private ConnectionImp connection ;
-    private ResultSet resultSet;
+public class StatementImp implements Statement {
+	private ConnectionImp connection;
+	private ResultsetImp resultSet;
 	private ArrayList<String> batches;
-	
-	private final static Logger logger = Logger.getLogger(StatementImp.class.getName());
-	
-	
+	private Object[][] ProducedData;
+
 	public StatementImp(ConnectionImp con) {
-		this.connection=con;
+		this.connection = con;
 	}
+
 	@Override
 	public void addBatch(String arg0) throws SQLException {
 		batches.add(arg0);
-		
+
 	}
 
 	@Override
 	public void clearBatch() throws SQLException {
-		batches.clear();	
-		
+		batches.clear();
+
 	}
+
 	@Override
 	public void close() throws SQLException {
-        connection = null;
-        batches = null;
-        resultSet=null;
+		connection = null;
+		batches = null;
+		resultSet = null;
 	}
+
 	@Override
 	public boolean execute(String arg0) throws SQLException {
 		DBMSController executor = DBMSController.getInstance();
 		executor.invoke(arg0);
-		//....
+		if (executeQuery(arg0).next())
+			return true;
+		
+
 		return false;
 	}
 
 	@Override
 	public ResultSet executeQuery(String arg0) throws SQLException {
-		
-		return null;
+		DBMSController executor = DBMSController.getInstance();
+		String s = executor.invoke(arg0);
+		String[] ss = s.split("\\n");
+		ProducedData = new String[ss.length][ss[0].length()];
+		for (int i = 0; i < ss.length; i++) {
+			String[] t = ss[i].split("\\s");
+			ProducedData[i] = t;
+
+		}
+
+		resultSet = new ResultsetImp(this, ProducedData);
+
+		return resultSet;
+
 	}
-	
+
 	@Override
 	public int executeUpdate(String arg0) throws SQLException {
-		
-		return 0;
+		DBMSController executor = DBMSController.getInstance();
+		String s = executor.invoke(arg0);
+		String[] ss = s.split("\\s");
+		return Integer.parseInt(ss[0]);
+
+		 
 	}
+
 	@Override
 	public int[] executeBatch() throws SQLException {
-        int[] arr = new int[batches.size()];
-        for (int i = 0; i < batches.size(); i++) {
-            String query = batches.get(i);
-            if (execute(query)) arr[i] = SUCCESS_NO_INFO;
-            arr[i] = executeUpdate(query);
-        }
-        return arr;
+		int[] arr = new int[batches.size()];
+		for (int i = 0; i < batches.size(); i++) {
+			String query = batches.get(i);
+			DBMSController executor = DBMSController.getInstance();
+			String s = executor.invoke(query);
+			if (execute(query)) arr[i] = SUCCESS_NO_INFO;
+			// ":||||
+			else arr[i] = executeUpdate(query);
+		}
+		return arr;
 	}
-	
+
 	@Override
 	public Connection getConnection() throws SQLException {
 		return connection;
+	}
+
+	@Override
+	public ResultSet getResultSet() throws SQLException {
+		return this.resultSet;
+	}
+
+	@Override
+	public int getUpdateCount() throws SQLException {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -83,29 +117,20 @@ public class StatementImp implements Statement{
 		throw new UnsupportedOperationException();
 	}
 
-	
-
 	@Override
 	public void cancel() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
-
-
-
-
 
 	@Override
 	public void clearWarnings() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
 
-
 	@Override
 	public void closeOnCompletion() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
-
-
 
 	@Override
 	public boolean execute(String arg0, int arg1) throws SQLException {
@@ -122,10 +147,6 @@ public class StatementImp implements Statement{
 		throw new UnsupportedOperationException();
 	}
 
-
-
-
-
 	@Override
 	public int executeUpdate(String arg0, int arg1) throws SQLException {
 		throw new UnsupportedOperationException();
@@ -140,8 +161,6 @@ public class StatementImp implements Statement{
 	public int executeUpdate(String arg0, String[] arg1) throws SQLException {
 		throw new UnsupportedOperationException();
 	}
-
-
 
 	@Override
 	public int getFetchDirection() throws SQLException {
@@ -185,11 +204,6 @@ public class StatementImp implements Statement{
 	}
 
 	@Override
-	public ResultSet getResultSet() throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public int getResultSetConcurrency() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
@@ -201,11 +215,6 @@ public class StatementImp implements Statement{
 
 	@Override
 	public int getResultSetType() throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public int getUpdateCount() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -267,7 +276,7 @@ public class StatementImp implements Statement{
 	@Override
 	public void setQueryTimeout(int arg0) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
