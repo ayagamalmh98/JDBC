@@ -96,8 +96,8 @@ public class StatementImp implements Statement {
 		logger.log.info("Executing the given SQL statement and returning ResultSet ");
 		DBMSController executor = DBMSController.getInstance();
 		String s = executor.invoke(arg0);
-		String tablename = executor.getTableName();
-		String [][] columnsinfo = executor.getColumnsInfo();
+		String tablename = executor.getTableName(arg0);
+		String [][] columnsinfo = executor.getColumnsInfo(arg0);
 		String[] ss = s.split("\\n");
 		ProducedData = new String[ss.length][ss[0].length()];
 		for (int i = 0; i < ss.length; i++) {
