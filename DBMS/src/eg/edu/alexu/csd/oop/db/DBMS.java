@@ -86,10 +86,10 @@ public class DBMS implements Database {
         }
 
         if (operation == 3) {
-
             carrier = DataExtractor.getInstance().dropDBData(query);
             return dropDatabase(carrier);
         }
+        
         if (operation == 4) {
             if (databases.isEmpty()) {
                 throw new SQLException("there is no databases");
@@ -99,6 +99,10 @@ public class DBMS implements Database {
 
         }
         return false;
+    }
+    
+    DB getactiveDB() {
+    	return activeDB;
     }
 
     public Object[][] executeQuery(String query) throws java.sql.SQLException {

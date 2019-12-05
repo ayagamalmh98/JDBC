@@ -169,7 +169,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 
     Object[][] selectSome(DataCarrier carrier) throws SQLException {
-
         Document doc = DOMFactory.getDomObj(dataFile);
         if (doc != null) {
             checkDataFile(doc, "Bad data File !");
@@ -326,7 +325,7 @@ import javax.xml.parsers.ParserConfigurationException;
         return true;
     }
 
-    private String[] columnsNames() throws SQLException {
+    String[] columnsNames() throws SQLException {
         Document doc = DOMFactory.getDomObj(schemaFile);
         if (doc != null) {
             NodeList columns = doc.getElementsByTagName("xs:attribute");
@@ -336,6 +335,21 @@ import javax.xml.parsers.ParserConfigurationException;
             }
             return toBeReturn;
 
+        } else {
+            throw new SQLException("Error loading data file !");
+        }
+
+    }
+    
+    String[] columnsTypes() throws SQLException {
+        Document doc = DOMFactory.getDomObj(schemaFile);
+        if (doc != null) {
+            NodeList columns = doc.getElementsByTagName("xs:attribute");
+            String[] toBeReturn = new String[columns.getLength() - 1];
+            for (int i = 0; i < columns.getLength() - 1; i++) {
+                toBeReturn[i] = columns.item(i).getAttributes().getNamedItem("type").getNodeValue().toLowerCase();
+            }
+            return toBeReturn;
         } else {
             throw new SQLException("Error loading data file !");
         }

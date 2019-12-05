@@ -57,6 +57,14 @@ import java.util.ArrayList;
         }
         return -1;
     }
+     
+     Table getTable(String name) {
+        int index = getTableIndex(name);
+        if( index != -1) {
+        	return tables.get(index);
+        }
+        return null;
+     }
 
      ArrayList<Table> getTables() {
         return tables;
