@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 
 public class DriverImp implements Driver{
-
+	private logger logger;
 	private static final String URL_REGEX = "jdbc:(\\w+)db://localhost";
     private static final Pattern urlPattern = Pattern.compile(URL_REGEX);
     private final String INVALID_URL = "Invalid url Format";
@@ -25,15 +25,21 @@ public class DriverImp implements Driver{
     public boolean acceptsURL(String arg0) throws SQLException {
     	
     	   Matcher urlMatcher = urlPattern.matcher(arg0);
-           if (!urlMatcher.matches()) throw new SQLException(INVALID_URL);
+    	   if (arg0==null) throw new SQLException("url is null");
+           if (!urlMatcher.matches()) return false;
         return true;
     }
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
-       
+    	logger=logger.getInstance();
+		if (!acceptsURL(url)) {
+			logger.log.warning("not accepted url");
+		throw new SQLException("not accepted url");
+		}
         File path1 = (File) info.get("path");
         String path = path1.getAbsolutePath();
+      
         return new ConnectionImp(url, path);
     }
 
