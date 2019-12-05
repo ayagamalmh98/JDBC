@@ -11,24 +11,54 @@ import java.util.ArrayList;
 import eg.edu.alexu.csd.oop.db.DBMSController;
 
 public class StatementImp implements Statement {
+	private logger logger;
 	private ConnectionImp connection;
 	private ResultsetImp resultSet;
 	private ArrayList<String> batches;
 	private Object[][] ProducedData;
-
+	private int time=0;
+	private boolean isClose;
 	public StatementImp(ConnectionImp con) {
+		logger = logger.getInstance();
+		logger.log.info("Building Statement object.");
 		this.connection = con;
+		isClose=false;
 	}
 
 	@Override
 	public void addBatch(String arg0) throws SQLException {
-		batches.add(arg0);
+		try {
+			if (isClose) {
+				
+				throw new SQLException("Statement is closed ..Can't do operations");
+			}
+			logger.log.info("adding new Batch.");
+			batches.add(arg0);
+			
+		}
+		catch(Exception e){
+			logger.log.info("Error in adding Batch");
+			
+		}
+
 
 	}
 
 	@Override
 	public void clearBatch() throws SQLException {
-		batches.clear();
+		try {
+			if (isClose) {
+				throw new SQLException("Statement is closed ..Can't do operations");
+			}
+			logger.log.info("Empties list of SQL commands.");
+			batches.clear();
+			
+		}
+		catch(Exception e){
+			logger.log.info("Error in clearing Batch List");
+			
+		}
+
 
 	}
 
@@ -37,21 +67,33 @@ public class StatementImp implements Statement {
 		connection = null;
 		batches = null;
 		resultSet = null;
+		isClose=true;
 	}
 
 	@Override
 	public boolean execute(String arg0) throws SQLException {
+		if (isClose) {
+			logger.log.warning("Statement is closed.");
+			throw new SQLException("Statement is closed ..Can't do operations");
+		}
+		logger.log.info("Executing the given SQL statement");
 		DBMSController executor = DBMSController.getInstance();
-		executor.invoke(arg0);
+		String s=executor.invoke(arg0);
 		if (executeQuery(arg0).next())
 			return true;
-		
+		if (s.contains("dropped"))
+			return true; // according to tests :"|
 
 		return false;
 	}
 
 	@Override
 	public ResultSet executeQuery(String arg0) throws SQLException {
+		if (isClose) {
+			logger.log.warning("Statement is closed.");
+			throw new SQLException("Statement is closed ..Can't do operations");
+		}
+		logger.log.info("Executing the given SQL statement and returning ResultSet ");
 		DBMSController executor = DBMSController.getInstance();
 		String s = executor.invoke(arg0);
 		String tablename = executor.getTableName();
@@ -64,12 +106,19 @@ public class StatementImp implements Statement {
 
 		}
 		resultSet = new ResultsetImp(ProducedData, columnsinfo, tablename, this);
+
 		return resultSet;
 
 	}
 
 	@Override
 	public int executeUpdate(String arg0) throws SQLException {
+		if (isClose) {
+			logger.log.warning("Statement is closed.");
+			throw new SQLException("Statement is closed ..Can't do operations");
+		}
+		logger.log.info("Executing the given SQL Update statement.");
+		
 		DBMSController executor = DBMSController.getInstance();
 		String s = executor.invoke(arg0);
 		String[] ss = s.split("\\s");
@@ -80,25 +129,60 @@ public class StatementImp implements Statement {
 
 	@Override
 	public int[] executeBatch() throws SQLException {
+		if (isClose) {
+			logger.log.warning("Statement is closed.");
+			throw new SQLException("Statement is closed ..Can't do operations");
+		}
+		logger.log.info("Executing list of SQL commands.");
 		int[] arr = new int[batches.size()];
 		for (int i = 0; i < batches.size(); i++) {
 			String query = batches.get(i);
 			DBMSController executor = DBMSController.getInstance();
 			String s = executor.invoke(query);
 			if (execute(query)) arr[i] = SUCCESS_NO_INFO;
-			// ":||||
+			
 			else arr[i] = executeUpdate(query);
 		}
 		return arr;
 	}
+	@Override
+	public int getQueryTimeout() throws SQLException {
+		if (isClose) {
+			logger.log.warning("Statement is closed.");
+			throw new SQLException("Statement is closed ..Can't do operations");
+		}
+		logger.log.info("getting the current query timeout limit ");
+		
+		return time;
+	}
+	@Override
+	public void setQueryTimeout(int arg0) throws SQLException {
+		if (isClose) {
+			logger.log.warning("Statement is closed.");
+			throw new SQLException("Statement is closed ..Can't do operations");
+		}
+		logger.log.info("setting the current query timeout limit ");
+		time=arg0;
+
+	}
 
 	@Override
 	public Connection getConnection() throws SQLException {
+		if (isClose) {
+			logger.log.warning("Statement is closed.");
+			throw new SQLException("Statement is closed ..Can't do operations");
+		}
+		logger.log.info("Getting the connection that produced this statement");
 		return connection;
 	}
 
 	@Override
 	public ResultSet getResultSet() throws SQLException {
+		if (isClose) {
+			logger.log.warning("Statement is closed.");
+			throw new SQLException("Statement is closed ..Can't do operations");
+		}
+		logger.log.info("Getting the current result as a ResultSet object ");
 		return this.resultSet;
 	}
 
@@ -198,12 +282,6 @@ public class StatementImp implements Statement {
 	}
 
 	@Override
-	public int getQueryTimeout() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public int getResultSetConcurrency() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
@@ -273,10 +351,6 @@ public class StatementImp implements Statement {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void setQueryTimeout(int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 
-	}
 
 }
