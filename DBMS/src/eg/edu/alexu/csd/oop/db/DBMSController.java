@@ -4,7 +4,7 @@ import eg.edu.alexu.csd.oop.db.parser.QV;
 
 import java.sql.SQLException;
 
-class DBMSController {
+public class DBMSController {
     private DBMSController() throws SQLException {
         manager = new DBMS();
     }
@@ -12,6 +12,7 @@ class DBMSController {
     private static DBMSController instance;
     private static Database manager;
     private static QV validator;
+    private static DataCarrier info;
 
     static {
         try {
@@ -22,11 +23,11 @@ class DBMSController {
         }
     }
 
-    static DBMSController getInstance() {
+    public static DBMSController getInstance() {
         return instance;
     }
 
-    String invoke(String query) throws SQLException {
+    public String invoke(String query) throws SQLException {
         query = query.toLowerCase();
         int operation = validator.isValidQuery(query);
         if (operation == 1 || operation == 2) {
@@ -65,6 +66,22 @@ class DBMSController {
             throw new SQLException("Not a valid SQL query!");
         }
     }
+    
+    public String[][] getColumnsInfo() {
+    	String[] names = info.columns;
+    	String[] types = info.columnsTypes;
+    	String[][] op = new String[2][names.length];
+    	for( int i =0;i<op.length;i++) {
+    		op[0][i]=names[i];
+    		op[1][i]=types[i];
+    	}
+		return op;
+	}
+    
+    public String getTableName() {
+		return info.tableName;
+	}
+
 
 
 }
