@@ -3,11 +3,13 @@ package eg.edu.alexu.csd.oop.jdbc;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import eg.edu.alexu.csd.oop.db.DataCarrier;
 public class ResultSetMetaDataImp implements ResultSetMetaData {
-    private String [][] columnsInfo;
+    private DataCarrier columnsInfo;
     private Object [][] productedData;
     private String tableName;
-    public ResultSetMetaDataImp ( Object [][] productedData, String [][] columnsInfo, String tableName  ) {
+    public ResultSetMetaDataImp ( Object [][] productedData, DataCarrier columnsInfo, String tableName  ) {
         this.productedData=productedData;
         this.columnsInfo=columnsInfo;
         this.tableName=tableName;
@@ -60,7 +62,8 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
 
     @Override
     public String getColumnName(int column) throws SQLException {
-        return columnsInfo[0][column];
+    	String[] names = columnsInfo.columns;
+        return names[column];
     }
 
     @Override
@@ -90,10 +93,13 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
 
     @Override
     public int getColumnType(int column) throws SQLException {
-       if(columnsInfo[1][column].equalsIgnoreCase("string"))
+    	String[] types = columnsInfo.columnsTypes;
+       if(types[column].equalsIgnoreCase("string"))
            return 12;
-       else
+       else if(types[column].equalsIgnoreCase("int"))
            return 4;
+       else
+    	   return 0;
     }
 
     @Override
