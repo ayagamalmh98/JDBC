@@ -22,6 +22,8 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 
+import eg.edu.alexu.csd.oop.db.DataCarrier;
+
 public class ResultsetImp implements ResultSet {
 
 	private logger logger;
@@ -31,11 +33,11 @@ public class ResultsetImp implements ResultSet {
 	private int RowCursor;
 	private int ColumnCursor;
 	private StatementImp statement;
-	private String[][] ColumnsInfo;
+	private DataCarrier ColumnsInfo;
 	private Object[][] ProductedData;
 	private String tableName;
-
-	public ResultsetImp(Object[][] ProductedData, String[][] ColumnsInfo, String tableName, StatementImp statement) {
+	
+	public ResultsetImp(Object[][] ProductedData, DataCarrier ColumnsInfo, String tableName, StatementImp statement) {
 		logger = logger.getInstance();
 		logger.log.info("Building ResultSet object.");
 		this.statement = statement;
@@ -52,6 +54,8 @@ public class ResultsetImp implements ResultSet {
 		ColumnCursor = 0;
 		RowCursor = 0;
 	}
+
+	
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
@@ -138,8 +142,9 @@ public class ResultsetImp implements ResultSet {
 			logger.log.warning("column Label is null.");
 			throw new SQLException("column Label is null.");
 		} else {
-			for (int i = 0; i < ColumnsInfo[0].length; i++) {
-				if (columnLabel.equalsIgnoreCase(ColumnsInfo[0][i])) {
+			String[] names = ColumnsInfo.columns;
+			for (int i = 0; i < names.length; i++) {
+				if (columnLabel.equalsIgnoreCase(names[i])) {
 					ColumnCursor = i;
 					logger.log.info("The index of " + columnLabel + "is" + ColumnCursor);
 					return ColumnCursor;
