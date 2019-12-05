@@ -15,6 +15,7 @@ public class StatementImp implements Statement {
 	private ResultsetImp resultSet;
 	private ArrayList<String> batches;
 	private Object[][] ProducedData;
+	private int time=0;
 
 	public StatementImp(ConnectionImp con) {
 		this.connection = con;
@@ -42,10 +43,11 @@ public class StatementImp implements Statement {
 	@Override
 	public boolean execute(String arg0) throws SQLException {
 		DBMSController executor = DBMSController.getInstance();
-		executor.invoke(arg0);
+		String s=executor.invoke(arg0);
 		if (executeQuery(arg0).next())
 			return true;
-		
+		if (s.contains("dropped"))
+			return true; // according to tests :"|
 
 		return false;
 	}
@@ -86,10 +88,20 @@ public class StatementImp implements Statement {
 			DBMSController executor = DBMSController.getInstance();
 			String s = executor.invoke(query);
 			if (execute(query)) arr[i] = SUCCESS_NO_INFO;
-			// ":||||
+			
 			else arr[i] = executeUpdate(query);
 		}
 		return arr;
+	}
+	@Override
+	public int getQueryTimeout() throws SQLException {
+		
+		return time;
+	}
+	@Override
+	public void setQueryTimeout(int arg0) throws SQLException {
+		time=arg0;
+
 	}
 
 	@Override
@@ -198,12 +210,6 @@ public class StatementImp implements Statement {
 	}
 
 	@Override
-	public int getQueryTimeout() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public int getResultSetConcurrency() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
@@ -273,10 +279,6 @@ public class StatementImp implements Statement {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void setQueryTimeout(int arg0) throws SQLException {
-		// TODO Auto-generated method stub
 
-	}
 
 }
