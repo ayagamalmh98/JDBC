@@ -12,11 +12,12 @@ public class DBMS implements Database {
     private File workspace;
     private ArrayList<DB> databases;
     private QV Validator;
-
-    public DBMS() {
+    private DB activeDB;
+     DBMS() {
         databases = new ArrayList<>();
         workspace = new File("workspace");
         Validator = new QV();
+        activeDB=null;
         if (!workspace.mkdir()) {
             deleteFile(workspace);
             workspace = new File("workspace");
@@ -48,21 +49,31 @@ public class DBMS implements Database {
             e.printStackTrace();
         }
         if (createFlag) {
+            activeDB = databases.get(databases.size() - 1);
             return databases.get(databases.size() - 1).getPath();
         }
         return null;
     }
 
     public boolean executeStructureQuery(String query) throws java.sql.SQLException {
-        query = query.toLowerCase();
         int operation = Validator.validStructure(query);
         if (operation < 0) {
             throw new SQLException("Invalid query");
         }
         DataCarrier carrier;
+        if (operation==0){
+            carrier = DataExtractor.getInstance().useDBData(query);
+            int index = findDatabaseByName(carrier.DBName);
+            if(index==-1){
+                return false;
+            }
+            activeDB = databases.get(index);
+            return true;
+        }
         if (operation == 1) {
             carrier = DataExtractor.getInstance().createDBData(query);
             addDatabase(carrier.DBName);
+            activeDB = databases.get(databases.size() - 1);
             return true;
         }
 
@@ -70,7 +81,6 @@ public class DBMS implements Database {
             if (databases.isEmpty()) {
                 throw new SQLException("there is no databases");
             }
-            DB activeDB = databases.get(databases.size() - 1);
             carrier = DataExtractor.getInstance().createTableData(query);
             return activeDB.addTable(carrier);
         }
@@ -84,7 +94,6 @@ public class DBMS implements Database {
             if (databases.isEmpty()) {
                 throw new SQLException("there is no databases");
             }
-            DB activeDB = databases.get(databases.size() - 1);
             carrier = DataExtractor.getInstance().dropTableData(query);
             return activeDB.deleteTable(carrier);
 
@@ -93,7 +102,6 @@ public class DBMS implements Database {
     }
 
     public Object[][] executeQuery(String query) throws java.sql.SQLException {
-        query = query.toLowerCase();
         DataCarrier carrier;
         int operation = Validator.validReadQuery(query);
         if (operation < 0) {
@@ -102,7 +110,6 @@ public class DBMS implements Database {
         if (databases.isEmpty()) {
             return null;
         }
-        DB activeDB = databases.get(databases.size() - 1);
         if (operation == 5) {
             carrier = DataExtractor.getInstance().selectAllData(query);
             if (!activeDB.tableExist(carrier.tableName)) {
@@ -147,7 +154,6 @@ public class DBMS implements Database {
     }
 
     public int executeUpdateQuery(String query) throws java.sql.SQLException {
-        query = query.toLowerCase();
         int operation = Validator.validUpdateQuery(query);
         if (operation < 0) {
             throw new SQLException("Invalid query");
@@ -156,7 +162,6 @@ public class DBMS implements Database {
         if (databases.isEmpty()) {
             return 0;
         }
-        DB activeDB = databases.get(databases.size() - 1);
         if (operation == 11) {
             carrier = DataExtractor.getInstance().insertSomeData(query);
             if (activeDB.getTableIndex(carrier.tableName) == -1) {
@@ -222,6 +227,7 @@ public class DBMS implements Database {
         }
         deleteFile(new File(databases.get(index).getPath()));
         databases.remove(index);
+        activeDB=null;
         return true;
     }
 

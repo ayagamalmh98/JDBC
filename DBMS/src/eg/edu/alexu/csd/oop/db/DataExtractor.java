@@ -5,47 +5,48 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
- class DataExtractor {
+class DataExtractor {
 
     private static DataExtractor instance = new DataExtractor();
-    private DataExtractor(){
+
+    private DataExtractor() {
 
     }
 
     private String selectAllPattern = "(\\A)(?i)(\\s*)(select)(\\s*)[*](\\s*)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
-	private String selectAllWherePattern = "(\\A)(?i)(\\s*)(select)(\\s*)[*](\\s*)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
-	private String selectSomePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
-	private String selectSomeWherePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
-	private String createDBPattern = "(\\A)(?i)(\\s*)(create)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
-	private String createTablePattern = "(\\A)(?i)(\\s*)(create)(\\s+)(table)(\\s+)(\\w+)(\\s*)[(](((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)))[)](\\s*)(?-i)(\\z)";
-	private String dropDBPattern = "(\\A)(?i)(\\s*)(drop)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
-	private String dropTablePattern = "(\\A)(?i)(\\s*)(drop)(\\s+)(table)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
-	private String insertSomePattern = "(\\A)(?i)(\\s*)(insert)(\\s+)(into)(\\s+)(\\w+)(\\s*)([(](((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))[)])(\\s*)(values)(\\s*)[(]((\\s*)(((\\s*)[']([^'])*['](\\s*)[,](\\s*))|((\\s*)([0-9])+(\\s*)[,](\\s*)))*(((\\s*)[']([^'])*['](\\s*))|((\\s*)([0-9])+(\\s*))))[)](\\s*)(?-i)(\\z)";
-	private String insertAllPattern = "(\\A)(?i)(\\s*)(insert)(\\s+)(into)(\\s+)(\\w+)(\\s*)(values)(\\s*)[(]((\\s*)(((\\s*)[']([^'])*['](\\s*)[,](\\s*))|((\\s*)([0-9])+(\\s*)[,](\\s*)))*(((\\s*)[']([^'])*['](\\s*))|((\\s*)([0-9])+(\\s*))))[)](\\s*)(?-i)(\\z)";
-	private String deleteAllPattern = "(\\A)(?i)(\\s*)(delete)(\\s+)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
-	private String deleteSomePattern = "(\\A)(?i)(\\s*)(delete)(\\s+)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
-	private String updatePattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s*)(?-i)(\\z)";
-	private String updateWherePattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
-
-     static DataExtractor getInstance() {
+    private String selectAllWherePattern = "(\\A)(?i)(\\s*)(select)(\\s*)[*](\\s*)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
+    private String selectSomePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+    private String selectSomeWherePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
+    private String createDBPattern = "(\\A)(?i)(\\s*)(create)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+    private String createTablePattern = "(\\A)(?i)(\\s*)(create)(\\s+)(table)(\\s+)(\\w+)(\\s*)[(](((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)))[)](\\s*)(?-i)(\\z)";
+    private String dropDBPattern = "(\\A)(?i)(\\s*)(drop)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+    private String dropTablePattern = "(\\A)(?i)(\\s*)(drop)(\\s+)(table)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+    private String insertSomePattern = "(\\A)(?i)(\\s*)(insert)(\\s+)(into)(\\s+)(\\w+)(\\s*)([(](((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))[)])(\\s*)(values)(\\s*)[(]((\\s*)(((\\s*)[']([^'])*['](\\s*)[,](\\s*))|((\\s*)([0-9])+(\\s*)[,](\\s*)))*(((\\s*)[']([^'])*['](\\s*))|((\\s*)([0-9])+(\\s*))))[)](\\s*)(?-i)(\\z)";
+    private String insertAllPattern = "(\\A)(?i)(\\s*)(insert)(\\s+)(into)(\\s+)(\\w+)(\\s*)(values)(\\s*)[(]((\\s*)(((\\s*)[']([^'])*['](\\s*)[,](\\s*))|((\\s*)([0-9])+(\\s*)[,](\\s*)))*(((\\s*)[']([^'])*['](\\s*))|((\\s*)([0-9])+(\\s*))))[)](\\s*)(?-i)(\\z)";
+    private String deleteAllPattern = "(\\A)(?i)(\\s*)(delete)(\\s+)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+    private String deleteSomePattern = "(\\A)(?i)(\\s*)(delete)(\\s+)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
+    private String updatePattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s*)(?-i)(\\z)";
+    private String updateWherePattern = "(\\A)(?i)(\\s*)(update)(\\s+)(\\w+)(\\s+)(set)(\\s+)(((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)[=](\\s*)(([']([^']*)['])|[0-9]+)(\\s*)))(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
+    private static final String useDBPattern = "(\\A)(?i)(\\s*)(use)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
+    static DataExtractor getInstance() {
         return instance;
     }
 
-     DataCarrier createTableData(String query) throws SQLException{
+    DataCarrier createTableData(String query) throws SQLException {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(createTablePattern);
         Matcher mat = pat.matcher(query);
         if (mat.matches()) {
             String[] data = mat.group(9).split(",");
-            toBeReturn.tableName= mat.group(7);
-            if(toBeReturn.tableName.equalsIgnoreCase("table")||
-                    toBeReturn.tableName.equalsIgnoreCase("database")||
-                    toBeReturn.tableName.equalsIgnoreCase("create")||
-                    toBeReturn.tableName.equalsIgnoreCase("insert")||
-                    toBeReturn.tableName.equalsIgnoreCase("select")||
-                    toBeReturn.tableName.equalsIgnoreCase("delete")||
-                    toBeReturn.tableName.equalsIgnoreCase("update")||
-                    toBeReturn.tableName.equalsIgnoreCase("where")){
+            toBeReturn.tableName = mat.group(7);
+            if (toBeReturn.tableName.equalsIgnoreCase("table") ||
+                    toBeReturn.tableName.equalsIgnoreCase("database") ||
+                    toBeReturn.tableName.equalsIgnoreCase("create") ||
+                    toBeReturn.tableName.equalsIgnoreCase("insert") ||
+                    toBeReturn.tableName.equalsIgnoreCase("select") ||
+                    toBeReturn.tableName.equalsIgnoreCase("delete") ||
+                    toBeReturn.tableName.equalsIgnoreCase("update") ||
+                    toBeReturn.tableName.equalsIgnoreCase("where")) {
                 throw new SQLException("Invalid Name");
             }
             toBeReturn.columns = new String[data.length];
@@ -64,7 +65,7 @@ import java.util.regex.Pattern;
         return null;
     }
 
-     DataCarrier insertSomeData(String query) throws SQLException {
+    DataCarrier insertSomeData(String query) throws SQLException {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(insertSomePattern);
         Matcher mat = pat.matcher(query);
@@ -83,29 +84,33 @@ import java.util.regex.Pattern;
         }
         return null;
     }
-     DataCarrier createDBData(String query) throws SQLException{
-        return DBData(query,createDBPattern);
+
+    DataCarrier createDBData(String query) throws SQLException {
+        return DBData(query, createDBPattern);
     }
-     DataCarrier dropDBData(String query) throws SQLException{
-        return DBData(query,dropDBPattern);
+
+    DataCarrier dropDBData(String query) throws SQLException {
+        return DBData(query, dropDBPattern);
     }
-     DataCarrier dropTableData(String query){
+
+    DataCarrier dropTableData(String query) {
         return dropDeleteTable(query, dropTablePattern);
     }
-    private DataCarrier DBData(String query,String pattern) throws SQLException{
+
+    private DataCarrier DBData(String query, String pattern) throws SQLException {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(pattern);
         Matcher mat = pat.matcher(query);
         if (mat.matches()) {
             toBeReturn.DBName = mat.group(7);
-            if(toBeReturn.DBName.equalsIgnoreCase("table")||
-                    toBeReturn.DBName.equalsIgnoreCase("database")||
-                    toBeReturn.DBName.equalsIgnoreCase("create")||
-                    toBeReturn.DBName.equalsIgnoreCase("insert")||
-                    toBeReturn.DBName.equalsIgnoreCase("select")||
-                    toBeReturn.DBName.equalsIgnoreCase("delete")||
-                    toBeReturn.DBName.equalsIgnoreCase("update")||
-                    toBeReturn.DBName.equalsIgnoreCase("where")){
+            if (toBeReturn.DBName.equalsIgnoreCase("table") ||
+                    toBeReturn.DBName.equalsIgnoreCase("database") ||
+                    toBeReturn.DBName.equalsIgnoreCase("create") ||
+                    toBeReturn.DBName.equalsIgnoreCase("insert") ||
+                    toBeReturn.DBName.equalsIgnoreCase("select") ||
+                    toBeReturn.DBName.equalsIgnoreCase("delete") ||
+                    toBeReturn.DBName.equalsIgnoreCase("update") ||
+                    toBeReturn.DBName.equalsIgnoreCase("where")) {
                 throw new SQLException("Invalid Name");
             }
             return toBeReturn;
@@ -113,7 +118,7 @@ import java.util.regex.Pattern;
         return null;
     }
 
-     DataCarrier insertAllData(String query) {
+    DataCarrier insertAllData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(insertAllPattern);
         Matcher mat = pat.matcher(query);
@@ -127,7 +132,7 @@ import java.util.regex.Pattern;
         return null;
     }
 
-     DataCarrier deleteAllData(String query) {
+    DataCarrier deleteAllData(String query) {
         return dropDeleteTable(query, deleteAllPattern);
     }
 
@@ -142,7 +147,7 @@ import java.util.regex.Pattern;
         return null;
     }
 
-     DataCarrier deleteSomeData(String query) {
+    DataCarrier deleteSomeData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(deleteSomePattern);
         Matcher mat = pat.matcher(query);
@@ -159,7 +164,7 @@ import java.util.regex.Pattern;
         return null;
     }
 
-     DataCarrier selectAllData(String query) {
+    DataCarrier selectAllData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(selectAllPattern);
         Matcher mat = pat.matcher(query);
@@ -170,7 +175,7 @@ import java.util.regex.Pattern;
         return null;
     }
 
-     DataCarrier selectAllWhereData(String query) {
+    DataCarrier selectAllWhereData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(selectAllWherePattern);
         Matcher mat = pat.matcher(query);
@@ -187,7 +192,7 @@ import java.util.regex.Pattern;
         return null;
     }
 
-     DataCarrier selectSomeData(String query) {
+    DataCarrier selectSomeData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(selectSomePattern);
         Matcher mat = pat.matcher(query);
@@ -200,7 +205,7 @@ import java.util.regex.Pattern;
         return null;
     }
 
-     DataCarrier selectSomeWhereData(String query) {
+    DataCarrier selectSomeWhereData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(selectSomeWherePattern);
         Matcher mat = pat.matcher(query);
@@ -235,7 +240,7 @@ import java.util.regex.Pattern;
         fillValues(toBeReturn, valuesData);
     }
 
-     DataCarrier updateData(String query) {
+    DataCarrier updateData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(updatePattern);
         Matcher mat = pat.matcher(query);
@@ -246,7 +251,7 @@ import java.util.regex.Pattern;
         return null;
     }
 
-     DataCarrier updateWhereData(String query) {
+    DataCarrier updateWhereData(String query) {
         DataCarrier toBeReturn = new DataCarrier();
         Pattern pat = Pattern.compile(updateWherePattern);
         Matcher mat = pat.matcher(query);
@@ -263,6 +268,16 @@ import java.util.regex.Pattern;
         return null;
     }
 
+    DataCarrier useDBData(String query) {
+        DataCarrier toBeReturn = new DataCarrier();
+        Pattern pat = Pattern.compile(useDBPattern);
+        Matcher mat = pat.matcher(query);
+        if (mat.matches()) {
+            toBeReturn.DBName = mat.group(5);
+            return toBeReturn;
+        }
+        return null;
+    }
 
     private void fillColumns(DataCarrier toBeReturn, String[] data) {
         Pattern wordWithoutSingleQuotes = Pattern.compile("\\A\\s*(\\w+)\\s*\\z");

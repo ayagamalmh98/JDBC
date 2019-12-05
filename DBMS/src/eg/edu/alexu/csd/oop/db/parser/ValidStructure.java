@@ -8,9 +8,9 @@ public class ValidStructure implements Parser {
     private static final String createTablePattern = "(\\A)(?i)(\\s*)(create)(\\s+)(table)(\\s+)(\\w+)(\\s*)[(](((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)))[)](\\s*)(?-i)(\\z)";
     private static final String dropDBPattern = "(\\A)(?i)(\\s*)(drop)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
     private static final String dropTablePattern = "(\\A)(?i)(\\s*)(drop)(\\s+)(table)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
-
+    private static final String useDBPattern = "(\\A)(?i)(\\s*)(use)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
     public int isValid(String query) {
-        return Math.max(createIsValid(query), dropIsValid(query));
+        return Math.max(useIsValid(query),Math.max(createIsValid(query), dropIsValid(query)));
     }
 
     private int createIsValid(String query) {
@@ -19,6 +19,9 @@ public class ValidStructure implements Parser {
 
     private int dropIsValid(String query) {
         return Math.max(regexMatcher(query, dropDBPattern) ? 3 : -1, regexMatcher(query, dropTablePattern) ? 4 : -1);
+    }
+    private int useIsValid(String query){
+        return regexMatcher(query,useDBPattern)?0:-1;
     }
 
     private boolean regexMatcher(String input, String pattern) {
