@@ -348,6 +348,7 @@ import javax.xml.parsers.ParserConfigurationException;
             String[] toBeReturn = new String[columns.getLength() - 1];
             for (int i = 0; i < columns.getLength() - 1; i++) {
                 toBeReturn[i] = columns.item(i).getAttributes().getNamedItem("type").getNodeValue().toLowerCase();
+                toBeReturn[i] = toBeReturn[i].substring(3);
             }
             return toBeReturn;
         } else {
