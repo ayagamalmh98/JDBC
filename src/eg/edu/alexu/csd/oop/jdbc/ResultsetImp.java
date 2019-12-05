@@ -22,7 +22,36 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 
-public class ResultsetImp implements ResultSet{
+public class ResultsetImp implements ResultSet {
+
+	private logger logger;
+	private boolean close;
+	private int rows;
+	private int Columns;
+	private int RowCursor;
+	private int ColumnCursor;
+	private StatementImp statement;
+	private String[][] ColumnsInfo;
+	private Object[][] ProductedData;
+	private String tableName;
+
+	public ResultsetImp(Object[][] ProductedData, String[][] ColumnsInfo, String tableName, StatementImp statement) {
+		logger = logger.getInstance();
+		logger.log.info("Building ResultSet object.");
+		this.statement = statement;
+		this.ColumnsInfo = ColumnsInfo;
+		this.ProductedData = ProductedData;
+		this.tableName = tableName;
+		close = false;
+		rows = ProductedData.length;
+		if (ProductedData.length != 0 && ProductedData[0] != null) {
+			Columns = ProductedData[0].length;
+		} else {
+			Columns = 0;
+		}
+		ColumnCursor = 0;
+		RowCursor = 0;
+	}
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
@@ -35,21 +64,42 @@ public class ResultsetImp implements ResultSet{
 	}
 
 	@Override
-	public boolean absolute(int arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean absolute(int row) throws SQLException {
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
+		}
+		logger.log.info("Moving to the absolute row " + row);
+		if (row > 0) {
+			RowCursor = row;
+		} else if (row < 0) {
+			RowCursor = rows + 1 + row;
+		} else {
+			RowCursor = 0;
+		}
+		return RowCursor > 0 && RowCursor < rows + 1;
 	}
 
 	@Override
 	public void afterLast() throws SQLException {
-		// TODO Auto-generated method stub
-		
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("ResultSet is closed.");
+		}
+		logger.log.info("Moving to after Last row.");
+		if (rows != 0) {
+			RowCursor = rows + 1;
+		}
 	}
 
 	@Override
 	public void beforeFirst() throws SQLException {
-		// TODO Auto-generated method stub
-		
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("ResultSet is closed.");
+		}
+		logger.log.info("Moving to before First row.");
+		RowCursor = 0;
 	}
 
 	@Override
@@ -64,8 +114,13 @@ public class ResultsetImp implements ResultSet{
 
 	@Override
 	public void close() throws SQLException {
-		// TODO Auto-generated method stub
-		
+		if (!close) {
+			logger.log.warning("Closing ResultSet.");
+			close = true;
+			ProductedData = null;
+		}
+		logger.log.warning("ResultSet is alraedy closed.");
+		throw new SQLException("ResultSet is already closed.");
 	}
 
 	@Override
@@ -74,15 +129,36 @@ public class ResultsetImp implements ResultSet{
 	}
 
 	@Override
-	public int findColumn(String arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int findColumn(String columnLabel) throws SQLException {
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("ResultSet is closed.");
+		}
+		if (columnLabel == null) {
+			logger.log.warning("column Label is null.");
+			throw new SQLException("column Label is null.");
+		} else {
+			for (int i = 0; i < ColumnsInfo[0].length; i++) {
+				if (columnLabel.equalsIgnoreCase(ColumnsInfo[0][i])) {
+					ColumnCursor = i;
+					logger.log.info("The index of " + columnLabel + "is" + ColumnCursor);
+					return ColumnCursor;
+				}
+			}
+			logger.log.warning("The given Column Label doesn't exist in ResultSet");
+			throw new SQLException("The given Column Label doesn't exist in ResultSet");
+		}
 	}
 
 	@Override
 	public boolean first() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("ResultSet is closed.");
+		}
+		logger.log.info("Moving to First row.");
+		RowCursor = 1;
+		return rows != 0;
 	}
 
 	@Override
@@ -102,8 +178,7 @@ public class ResultsetImp implements ResultSet{
 
 	@Override
 	public InputStream getAsciiStream(String arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -262,15 +337,33 @@ public class ResultsetImp implements ResultSet{
 	}
 
 	@Override
-	public int getInt(int arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getInt(int columnIndex) throws SQLException {
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("ResultSet is closed.");
+		}
+		logger.log.info("Fetching the value of the designated column at" + columnIndex);
+		if (columnIndex > Columns) {
+			logger.log.info("Given column index that exceeds the number of Columns.");
+			throw new SQLException("Invalid column index.");
+		}
+		if (isAfterLast() || isBeforeFirst()) {
+			throw new SQLException();
+		}
+		Object x = ProductedData[RowCursor - 1][columnIndex - 1];
+		if (x instanceof String) {
+			String y = (String) x;
+			if (y.equalsIgnoreCase("null")) {
+				return 0;
+			}
+		}
+		int op = (Integer) x;
+		return op;
 	}
 
 	@Override
-	public int getInt(String arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getInt(String columnLabel) throws SQLException {
+		return getInt(findColumn(columnLabel));
 	}
 
 	@Override
@@ -285,8 +378,11 @@ public class ResultsetImp implements ResultSet{
 
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("ResultSet is closed.");
+		}
+		return new ResultSetMetaDataImp(ProductedData, ColumnsInfo, tableName);
 	}
 
 	@Override
@@ -320,9 +416,27 @@ public class ResultsetImp implements ResultSet{
 	}
 
 	@Override
-	public Object getObject(int arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public Object getObject(int columnIndex) throws SQLException {
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("ResultSet is closed.");
+		}
+		if (columnIndex > Columns) {
+			logger.log.info("Given column index that exceeds the number of Columns.");
+			throw new SQLException("Invalid column index.");
+		}
+		if (isAfterLast() || isBeforeFirst()) {
+			throw new RuntimeException();
+		}
+		logger.log.info("Fetching the value of the designated column at " + columnIndex);
+		Object x = ProductedData[RowCursor - 1][columnIndex - 1];
+		if (x instanceof String) {
+			String y = (String) x;
+			if (y.equalsIgnoreCase("null")) {
+				return null;
+			}
+		}
+		return x;
 	}
 
 	@Override
@@ -397,20 +511,42 @@ public class ResultsetImp implements ResultSet{
 
 	@Override
 	public Statement getStatement() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("ResultSet is closed.");
+		}
+		return statement;
 	}
 
 	@Override
-	public String getString(int arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public String getString(int columnIndex) throws SQLException {
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("ResultSet is closed.");
+		}
+		if (columnIndex > Columns) {
+			logger.log.info("Given invalid column index to getString.");
+			throw new SQLException("Invalid column index.");
+		}
+		if (isAfterLast() || isBeforeFirst()) {
+			throw new SQLException();
+		}
+		logger.log.info("Fetching the value of the designated column at  " + columnIndex);
+		Object x = ProductedData[RowCursor - 1][columnIndex - 1];
+		if (x instanceof String) {
+			final String y = (String) x;
+			if (y.equalsIgnoreCase("null")) {
+				return null;
+			}
+		}
+		String op = (String) x;
+		return op;
+
 	}
 
 	@Override
-	public String getString(String arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public String getString(String columnLabel) throws SQLException {
+		return getString(findColumn(columnLabel));
 	}
 
 	@Override
@@ -490,38 +626,54 @@ public class ResultsetImp implements ResultSet{
 
 	@Override
 	public boolean isAfterLast() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
+		}
+		return RowCursor == rows + 1;
 	}
 
 	@Override
 	public boolean isBeforeFirst() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
+		}
+		return RowCursor == 0;
 	}
 
 	@Override
 	public boolean isClosed() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return close;
 	}
 
 	@Override
 	public boolean isFirst() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
+		}
+		return RowCursor == 1;
 	}
 
 	@Override
 	public boolean isLast() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
+		}
+		return RowCursor == rows;
 	}
 
 	@Override
 	public boolean last() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
+		}
+		logger.log.info("Moving to last row.");
+		RowCursor = rows;
+		return rows != 0;
 	}
 
 	@Override
@@ -536,14 +688,24 @@ public class ResultsetImp implements ResultSet{
 
 	@Override
 	public boolean next() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
+		}
+		logger.log.info("Moving forward one row.");
+		RowCursor++;
+		return !isAfterLast();
 	}
 
 	@Override
 	public boolean previous() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		if (close) {
+			logger.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
+		}
+		logger.log.info("Moving backwards one row.");
+		RowCursor--;
+		return !isBeforeFirst();
 	}
 
 	@Override
