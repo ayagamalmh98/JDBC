@@ -1,6 +1,6 @@
 package eg.edu.alexu.csd.oop.db;
 
- class DataCarrier {
+ public class DataCarrier {
      DataCarrier() {
     }
 
@@ -9,7 +9,7 @@ package eg.edu.alexu.csd.oop.db;
      String conditionColumn;
      String conditionValue;
      char conditionOperator;
-     String[] columns;
+     public String[] columns;
      String[] columnsTypes;
      String[] values;
 
