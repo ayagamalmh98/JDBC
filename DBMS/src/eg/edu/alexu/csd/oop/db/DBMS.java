@@ -101,8 +101,8 @@ public class DBMS implements Database {
         return false;
     }
     
-    DB getactiveDB() {
-    	return activeDB;
+    DB getactiveDB() throws SQLException {	
+    		return activeDB;
     }
 
     public Object[][] executeQuery(String query) throws java.sql.SQLException {
@@ -153,6 +153,15 @@ public class DBMS implements Database {
                 throw new SQLException("No such a table");
             }
             return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).selectSomeWhere(carrier);
+        } else if(operation == 15){
+            carrier = DataExtractor.getInstance().selectAs(query);
+            if (!activeDB.tableExist(carrier.tableName)) {
+                throw new SQLException("Table " + carrier.tableName + " does not exists in " + activeDB.getName());
+            }
+            if (activeDB.getTableIndex(carrier.tableName) == -1) {
+                throw new SQLException("No such a table");
+            }
+            return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).selectAs(carrier);
         }
         return null;
     }

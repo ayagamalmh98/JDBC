@@ -10,7 +10,7 @@ package eg.edu.alexu.csd.oop.db;
      String conditionValue;
      char conditionOperator;
      public String[] columns;
-     String[] columnsTypes;
+     public String[] columnsTypes;
      String[] values;
 
 }
