@@ -64,7 +64,10 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
 
 	@Override
 	public String getColumnLabel(int column) throws SQLException {
-		return null;
+		if(columnsInfo.values[column]==null)
+		    return columnsInfo.columns[column];
+		else
+		    return columnsInfo.values[column];
 	}
 
 	@Override
