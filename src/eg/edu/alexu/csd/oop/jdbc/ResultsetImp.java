@@ -440,8 +440,12 @@ public class ResultsetImp implements ResultSet {
 			if (y.equalsIgnoreCase("null")) {
 				return null;
 			}
+			return y;
 		}
-		return x;
+		else {
+			Integer y = (Integer) x;
+			return y;
+		}
 	}
 
 	@Override

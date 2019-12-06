@@ -34,8 +34,7 @@ public class SanityTest {
     @Test
     public void testWrongQuery() throws SQLException 
     {
-        Connection connection = createDatabase("TestDB", true);
-        
+        Connection connection = createDatabase("TestDB", true);   
         try {
             Statement statement = connection.createStatement();
             statement.execute("CREATE   TABLE   table_name1(column_name1 varchar , column_name2    int,  column_name3 varchar)       ");

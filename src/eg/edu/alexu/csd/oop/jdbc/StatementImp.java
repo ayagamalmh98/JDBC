@@ -44,8 +44,9 @@ public class StatementImp implements Statement {
 	public boolean execute(String arg0) throws SQLException {
 		DBMSController executor = DBMSController.getInstance();
 		String s = executor.invoke(arg0);
-		if (executeQuery(arg0).next())
+		if (executeQuery(arg0).next()) {
 			return true;
+		}
 		if (s.contains("dropped"))
 			return true; // according to tests :"|
 
@@ -58,10 +59,10 @@ public class StatementImp implements Statement {
 		String s = executor.invoke(arg0);
 		String tablename = executor.getTableName(arg0);
 		DataCarrier columnsinfo = executor.getColumnsInfo(arg0);
-		String[] ss = s.split("\\n");
-		ProducedData = new String[ss.length][ss[0].length()];
+		Object[] ss = s.split("\\n");
+		ProducedData = new String[ss.length][((String) ss[0]).length()];
 		for (int i = 0; i < ss.length; i++) {
-			String[] t = ss[i].split("\\s");
+			Object[] t =  ((String) ss[i]).split("\\s");
 			ProducedData[i] = t;
 		}
 		resultSet = new ResultsetImp(ProducedData, columnsinfo, tablename, this);
