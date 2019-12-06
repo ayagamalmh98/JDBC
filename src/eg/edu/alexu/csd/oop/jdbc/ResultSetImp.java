@@ -135,22 +135,31 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public int findColumn(String columnLabel) throws SQLException {
 		if (close) {
-			log.log.warning("ResultSet is closed.");
+			logger.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
 		if (columnLabel == null) {
-			log.log.warning("column Label is null.");
+			logger.log.warning("column Label is null.");
 			throw new SQLException("column Label is null.");
 		} else {
 			String[] names = ColumnsInfo.columns;
+			String[] labels = ColumnsInfo.values;
 			for (int i = 0; i < names.length; i++) {
-				if (columnLabel.equalsIgnoreCase(names[i])) {
-					ColumnCursor = i;
-					log.log.info("The index of " + columnLabel + "is" + ColumnCursor);
-					return ColumnCursor;
+				if (labels[i] == null) {
+					if (columnLabel.equalsIgnoreCase(names[i])) {
+						ColumnCursor = i;
+						logger.log.info("The index of " + columnLabel + "is" + ColumnCursor);
+						return ColumnCursor;
+					}
+				} else if (labels[i] != null) {
+					if (columnLabel.equalsIgnoreCase(labels[i])) {
+						ColumnCursor = i;
+						logger.log.info("The index of " + columnLabel + "is" + ColumnCursor);
+						return ColumnCursor;
+					}
 				}
 			}
-			log.log.warning("The given Column Label doesn't exist in ResultSet");
+			logger.log.warning("The given Column Label doesn't exist in ResultSet");
 			throw new SQLException("The given Column Label doesn't exist in ResultSet");
 		}
 	}
