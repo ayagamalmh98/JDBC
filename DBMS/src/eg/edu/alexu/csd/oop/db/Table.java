@@ -188,6 +188,7 @@ import javax.xml.parsers.ParserConfigurationException;
         }
 
     }
+    
     Object[][] selectAs(DataCarrier carrier) throws SQLException{
        return selectSome(carrier);
     }

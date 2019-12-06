@@ -65,6 +65,21 @@ public class DBMSController {
 			throw new SQLException("Not a valid SQL query!");
 		}
 	}
+	
+	public Object[][] invokee(String query) throws SQLException {
+		query = query.toLowerCase();
+		int operation = validator.isValidQuery(query);
+		if (operation >= 5 && operation <= 8) {
+			Object[][] test2 = manager.executeQuery(query);
+			if (test2 == null) {
+				return null;
+			} else {
+				return test2;
+			}
+		} else {
+			throw new SQLException("Not a valid SQL query!");
+		}
+	}
 
 	public DataCarrier getColumnsInfo(String query) throws SQLException {
 		DB activeDB = ((DBMS) manager).getactiveDB();
@@ -147,3 +162,20 @@ public class DBMSController {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
