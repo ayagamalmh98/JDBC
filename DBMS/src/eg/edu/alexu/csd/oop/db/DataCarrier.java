@@ -11,6 +11,5 @@ package eg.edu.alexu.csd.oop.db;
      char conditionOperator;
      public String[] columns;
      public String[] columnsTypes;
-     String[] values;
-
+     public String[] values;
 }
