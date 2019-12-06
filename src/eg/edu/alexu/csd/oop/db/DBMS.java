@@ -55,6 +55,7 @@ public class DBMS implements Database {
         return null;
     }
 
+    
     public boolean executeStructureQuery(String query) throws java.sql.SQLException {
         int operation = Validator.validStructure(query);
         if (operation < 0) {
@@ -76,7 +77,6 @@ public class DBMS implements Database {
             activeDB = databases.get(databases.size() - 1);
             return true;
         }
-
         if (operation == 2) {
             if (databases.isEmpty()) {
                 throw new SQLException("there is no databases");
@@ -84,19 +84,16 @@ public class DBMS implements Database {
             carrier = DataExtractor.getInstance().createTableData(query);
             return activeDB.addTable(carrier);
         }
-
         if (operation == 3) {
             carrier = DataExtractor.getInstance().dropDBData(query);
             return dropDatabase(carrier);
         }
-        
         if (operation == 4) {
             if (databases.isEmpty()) {
                 throw new SQLException("there is no databases");
             }
             carrier = DataExtractor.getInstance().dropTableData(query);
             return activeDB.deleteTable(carrier);
-
         }
         return false;
     }

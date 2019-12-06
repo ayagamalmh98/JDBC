@@ -188,6 +188,9 @@ import javax.xml.parsers.ParserConfigurationException;
         }
 
     }
+    Object[][] selectAs(DataCarrier carrier) throws SQLException{
+       return selectSome(carrier);
+    }
 
     Object[][] selectSomeWhere(DataCarrier carrier) throws SQLException {
         Document doc = DOMFactory.getDomObj(dataFile);
