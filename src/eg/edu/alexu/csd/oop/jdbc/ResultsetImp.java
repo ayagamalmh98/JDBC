@@ -24,9 +24,9 @@ import java.util.Map;
 
 import eg.edu.alexu.csd.oop.db.DataCarrier;
 
-public class ResultsetImp implements ResultSet {
+public class ResultSetImp implements ResultSet {
 
-	private logger logger;
+	private Logger logger;
 	private boolean close;
 	private int rows;
 	private int Columns;
@@ -34,20 +34,20 @@ public class ResultsetImp implements ResultSet {
 	private int ColumnCursor;
 	private StatementImp statement;
 	private DataCarrier ColumnsInfo;
-	private Object[][] ProductedData;
+	private Object[][] ProducedData;
 	private String tableName;
 	
-	public ResultsetImp(Object[][] ProductedData, DataCarrier ColumnsInfo, String tableName, StatementImp statement) {
-		logger = logger.getInstance();
+	public ResultSetImp(Object[][] ProducedData, DataCarrier ColumnsInfo, String tableName, StatementImp statement) {
+		logger = Logger.getInstance();
 		logger.log.info("Building ResultSet object.");
 		this.statement = statement;
 		this.ColumnsInfo = ColumnsInfo;
-		this.ProductedData = ProductedData;
+		this.ProducedData = ProducedData;
 		this.tableName = tableName;
 		close = false;
-		rows = ProductedData.length;
-		if (ProductedData.length != 0 && ProductedData[0] != null) {
-			Columns = ProductedData[0].length;
+		rows = ProducedData.length;
+		if (ProducedData.length != 0 && ProducedData[0] != null) {
+			Columns = ProducedData[0].length;
 		} else {
 			Columns = 0;
 		}
@@ -58,12 +58,12 @@ public class ResultsetImp implements ResultSet {
 	
 
 	@Override
-	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+	public boolean isWrapperFor(Class<?> iFace) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public <T> T unwrap(Class<T> iface) throws SQLException {
+	public <T> T unwrap(Class<T> iFace) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -71,7 +71,7 @@ public class ResultsetImp implements ResultSet {
 	public boolean absolute(int row) throws SQLException {
 		if (close) {
 			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("Resultset is closed.");
+			throw new SQLException("ResultSet is closed.");
 		}
 		logger.log.info("Moving to the absolute row " + row);
 		if (row > 0) {
@@ -107,12 +107,12 @@ public class ResultsetImp implements ResultSet {
 	}
 
 	@Override
-	public void cancelRowUpdates() throws SQLException {
+	public void cancelRowUpdates() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void clearWarnings() throws SQLException {
+	public void clearWarnings() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -121,14 +121,14 @@ public class ResultsetImp implements ResultSet {
 		if (!close) {
 			logger.log.warning("Closing ResultSet.");
 			close = true;
-			ProductedData = null;
+			ProducedData = null;
 		}
-		logger.log.warning("ResultSet is alraedy closed.");
+		logger.log.warning("ResultSet is already closed.");
 		throw new SQLException("ResultSet is already closed.");
 	}
 
 	@Override
-	public void deleteRow() throws SQLException {
+	public void deleteRow() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -167,177 +167,177 @@ public class ResultsetImp implements ResultSet {
 	}
 
 	@Override
-	public Array getArray(int arg0) throws SQLException {
+	public Array getArray(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Array getArray(String arg0) throws SQLException {
+	public Array getArray(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public InputStream getAsciiStream(int arg0) throws SQLException {
+	public InputStream getAsciiStream(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public InputStream getAsciiStream(String arg0) throws SQLException {
+	public InputStream getAsciiStream(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public BigDecimal getBigDecimal(int arg0) throws SQLException {
+	public BigDecimal getBigDecimal(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public BigDecimal getBigDecimal(String arg0) throws SQLException {
+	public BigDecimal getBigDecimal(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public BigDecimal getBigDecimal(int arg0, int arg1) throws SQLException {
+	public BigDecimal getBigDecimal(int arg0, int arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public BigDecimal getBigDecimal(String arg0, int arg1) throws SQLException {
+	public BigDecimal getBigDecimal(String arg0, int arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public InputStream getBinaryStream(int arg0) throws SQLException {
+	public InputStream getBinaryStream(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public InputStream getBinaryStream(String arg0) throws SQLException {
+	public InputStream getBinaryStream(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Blob getBlob(int arg0) throws SQLException {
+	public Blob getBlob(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Blob getBlob(String arg0) throws SQLException {
+	public Blob getBlob(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean getBoolean(int arg0) throws SQLException {
+	public boolean getBoolean(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean getBoolean(String arg0) throws SQLException {
+	public boolean getBoolean(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public byte getByte(int arg0) throws SQLException {
+	public byte getByte(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public byte getByte(String arg0) throws SQLException {
+	public byte getByte(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public byte[] getBytes(int arg0) throws SQLException {
+	public byte[] getBytes(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public byte[] getBytes(String arg0) throws SQLException {
+	public byte[] getBytes(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Reader getCharacterStream(int arg0) throws SQLException {
+	public Reader getCharacterStream(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Reader getCharacterStream(String arg0) throws SQLException {
+	public Reader getCharacterStream(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Clob getClob(int arg0) throws SQLException {
+	public Clob getClob(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Clob getClob(String arg0) throws SQLException {
+	public Clob getClob(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getConcurrency() throws SQLException {
+	public int getConcurrency() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String getCursorName() throws SQLException {
+	public String getCursorName() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Date getDate(int arg0) throws SQLException {
+	public Date getDate(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Date getDate(String arg0) throws SQLException {
+	public Date getDate(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Date getDate(int arg0, Calendar arg1) throws SQLException {
+	public Date getDate(int arg0, Calendar arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Date getDate(String arg0, Calendar arg1) throws SQLException {
+	public Date getDate(String arg0, Calendar arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public double getDouble(int arg0) throws SQLException {
+	public double getDouble(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public double getDouble(String arg0) throws SQLException {
+	public double getDouble(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getFetchDirection() throws SQLException {
+	public int getFetchDirection() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getFetchSize() throws SQLException {
+	public int getFetchSize() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public float getFloat(int arg0) throws SQLException {
+	public float getFloat(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public float getFloat(String arg0) throws SQLException {
+	public float getFloat(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getHoldability() throws SQLException {
+	public int getHoldability() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -355,7 +355,7 @@ public class ResultsetImp implements ResultSet {
 		if (isAfterLast() || isBeforeFirst()) {
 			throw new SQLException();
 		}
-		Object x = ProductedData[RowCursor - 1][columnIndex - 1];
+		Object x = ProducedData[RowCursor - 1][columnIndex - 1];
 		if (x instanceof String) {
 			String y = (String) x;
 			if (y.equalsIgnoreCase("null")) {
@@ -372,12 +372,12 @@ public class ResultsetImp implements ResultSet {
 	}
 
 	@Override
-	public long getLong(int arg0) throws SQLException {
+	public long getLong(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public long getLong(String arg0) throws SQLException {
+	public long getLong(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -387,36 +387,36 @@ public class ResultsetImp implements ResultSet {
 			logger.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
-		return new ResultSetMetaDataImp(ProductedData, ColumnsInfo, tableName);
+		return new ResultSetMetaDataImp(ProducedData, ColumnsInfo, tableName);
 	}
 
 	@Override
-	public Reader getNCharacterStream(int arg0) throws SQLException {
+	public Reader getNCharacterStream(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Reader getNCharacterStream(String arg0) throws SQLException {
+	public Reader getNCharacterStream(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public NClob getNClob(int arg0) throws SQLException {
+	public NClob getNClob(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public NClob getNClob(String arg0) throws SQLException {
+	public NClob getNClob(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String getNString(int arg0) throws SQLException {
+	public String getNString(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String getNString(String arg0) throws SQLException {
+	public String getNString(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -434,7 +434,7 @@ public class ResultsetImp implements ResultSet {
 			throw new RuntimeException();
 		}
 		logger.log.info("Fetching the value of the designated column at " + columnIndex);
-		Object x = ProductedData[RowCursor - 1][columnIndex - 1];
+		Object x = ProducedData[RowCursor - 1][columnIndex - 1];
 		if (x instanceof String) {
 			String y = (String) x;
 			if (y.equalsIgnoreCase("null")) {
@@ -449,72 +449,72 @@ public class ResultsetImp implements ResultSet {
 	}
 
 	@Override
-	public Object getObject(String arg0) throws SQLException {
+	public Object getObject(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Object getObject(int arg0, Map<String, Class<?>> arg1) throws SQLException {
+	public Object getObject(int arg0, Map<String, Class<?>> arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Object getObject(String arg0, Map<String, Class<?>> arg1) throws SQLException {
+	public Object getObject(String arg0, Map<String, Class<?>> arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public <T> T getObject(int arg0, Class<T> arg1) throws SQLException {
+	public <T> T getObject(int arg0, Class<T> arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public <T> T getObject(String arg0, Class<T> arg1) throws SQLException {
+	public <T> T getObject(String arg0, Class<T> arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Ref getRef(int arg0) throws SQLException {
+	public Ref getRef(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Ref getRef(String arg0) throws SQLException {
+	public Ref getRef(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getRow() throws SQLException {
+	public int getRow() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RowId getRowId(int arg0) throws SQLException {
+	public RowId getRowId(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RowId getRowId(String arg0) throws SQLException {
+	public RowId getRowId(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SQLXML getSQLXML(int arg0) throws SQLException {
+	public SQLXML getSQLXML(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SQLXML getSQLXML(String arg0) throws SQLException {
+	public SQLXML getSQLXML(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public short getShort(int arg0) throws SQLException {
+	public short getShort(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public short getShort(String arg0) throws SQLException {
+	public short getShort(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -541,7 +541,7 @@ public class ResultsetImp implements ResultSet {
 			throw new SQLException();
 		}
 		logger.log.info("Fetching the value of the designated column at  " + columnIndex);
-		Object x = ProductedData[RowCursor - 1][columnIndex - 1];
+		Object x = ProducedData[RowCursor - 1][columnIndex - 1];
 		if (x instanceof String) {
 			final String y = (String) x;
 			if (y.equalsIgnoreCase("null")) {
@@ -559,77 +559,77 @@ public class ResultsetImp implements ResultSet {
 	}
 
 	@Override
-	public Time getTime(int arg0) throws SQLException {
+	public Time getTime(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Time getTime(String arg0) throws SQLException {
+	public Time getTime(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Time getTime(int arg0, Calendar arg1) throws SQLException {
+	public Time getTime(int arg0, Calendar arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Time getTime(String arg0, Calendar arg1) throws SQLException {
+	public Time getTime(String arg0, Calendar arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Timestamp getTimestamp(int arg0) throws SQLException {
+	public Timestamp getTimestamp(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Timestamp getTimestamp(String arg0) throws SQLException {
+	public Timestamp getTimestamp(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Timestamp getTimestamp(int arg0, Calendar arg1) throws SQLException {
+	public Timestamp getTimestamp(int arg0, Calendar arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Timestamp getTimestamp(String arg0, Calendar arg1) throws SQLException {
+	public Timestamp getTimestamp(String arg0, Calendar arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getType() throws SQLException {
+	public int getType() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public URL getURL(int arg0) throws SQLException {
+	public URL getURL(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public URL getURL(String arg0) throws SQLException {
+	public URL getURL(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public InputStream getUnicodeStream(int arg0) throws SQLException {
+	public InputStream getUnicodeStream(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public InputStream getUnicodeStream(String arg0) throws SQLException {
+	public InputStream getUnicodeStream(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SQLWarning getWarnings() throws SQLException {
+	public SQLWarning getWarnings() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void insertRow() throws SQLException {
+	public void insertRow() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -637,7 +637,7 @@ public class ResultsetImp implements ResultSet {
 	public boolean isAfterLast() throws SQLException {
 		if (close) {
 			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("Resultset is closed.");
+			throw new SQLException("ResultSet is closed.");
 		}
 		return RowCursor == rows + 1;
 	}
@@ -646,13 +646,13 @@ public class ResultsetImp implements ResultSet {
 	public boolean isBeforeFirst() throws SQLException {
 		if (close) {
 			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("Resultset is closed.");
+			throw new SQLException("ResultSet is closed.");
 		}
 		return RowCursor == 0;
 	}
 
 	@Override
-	public boolean isClosed() throws SQLException {
+	public boolean isClosed()  {
 		return close;
 	}
 
@@ -660,7 +660,7 @@ public class ResultsetImp implements ResultSet {
 	public boolean isFirst() throws SQLException {
 		if (close) {
 			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("Resultset is closed.");
+			throw new SQLException("ResultSet is closed.");
 		}
 		return RowCursor == 1;
 	}
@@ -669,7 +669,7 @@ public class ResultsetImp implements ResultSet {
 	public boolean isLast() throws SQLException {
 		if (close) {
 			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("Resultset is closed.");
+			throw new SQLException("ResultSet is closed.");
 		}
 		return RowCursor == rows;
 	}
@@ -678,7 +678,7 @@ public class ResultsetImp implements ResultSet {
 	public boolean last() throws SQLException {
 		if (close) {
 			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("Resultset is closed.");
+			throw new SQLException("ResultSet is closed.");
 		}
 		logger.log.info("Moving to last row.");
 		RowCursor = rows;
@@ -686,12 +686,12 @@ public class ResultsetImp implements ResultSet {
 	}
 
 	@Override
-	public void moveToCurrentRow() throws SQLException {
+	public void moveToCurrentRow() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void moveToInsertRow() throws SQLException {
+	public void moveToInsertRow() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -699,7 +699,7 @@ public class ResultsetImp implements ResultSet {
 	public boolean next() throws SQLException {
 		if (close) {
 			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("Resultset is closed.");
+			throw new SQLException("ResultSet is closed.");
 		}
 		logger.log.info("Moving forward one row.");
 		RowCursor++;
@@ -710,7 +710,7 @@ public class ResultsetImp implements ResultSet {
 	public boolean previous() throws SQLException {
 		if (close) {
 			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("Resultset is closed.");
+			throw new SQLException("ResultSet is closed.");
 		}
 		logger.log.info("Moving backwards one row.");
 		RowCursor--;
@@ -718,457 +718,457 @@ public class ResultsetImp implements ResultSet {
 	}
 
 	@Override
-	public void refreshRow() throws SQLException {
+	public void refreshRow() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean relative(int arg0) throws SQLException {
+	public boolean relative(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean rowDeleted() throws SQLException {
+	public boolean rowDeleted() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean rowInserted() throws SQLException {
+	public boolean rowInserted() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean rowUpdated() throws SQLException {
+	public boolean rowUpdated() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setFetchDirection(int arg0) throws SQLException {
+	public void setFetchDirection(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setFetchSize(int arg0) throws SQLException {
+	public void setFetchSize(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateArray(int arg0, Array arg1) throws SQLException {
+	public void updateArray(int arg0, Array arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateArray(String arg0, Array arg1) throws SQLException {
+	public void updateArray(String arg0, Array arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateAsciiStream(int arg0, InputStream arg1) throws SQLException {
+	public void updateAsciiStream(int arg0, InputStream arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateAsciiStream(String arg0, InputStream arg1) throws SQLException {
+	public void updateAsciiStream(String arg0, InputStream arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateAsciiStream(int arg0, InputStream arg1, int arg2) throws SQLException {
+	public void updateAsciiStream(int arg0, InputStream arg1, int arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateAsciiStream(String arg0, InputStream arg1, int arg2) throws SQLException {
+	public void updateAsciiStream(String arg0, InputStream arg1, int arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateAsciiStream(int arg0, InputStream arg1, long arg2) throws SQLException {
+	public void updateAsciiStream(int arg0, InputStream arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateAsciiStream(String arg0, InputStream arg1, long arg2) throws SQLException {
+	public void updateAsciiStream(String arg0, InputStream arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBigDecimal(int arg0, BigDecimal arg1) throws SQLException {
+	public void updateBigDecimal(int arg0, BigDecimal arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBigDecimal(String arg0, BigDecimal arg1) throws SQLException {
+	public void updateBigDecimal(String arg0, BigDecimal arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBinaryStream(int arg0, InputStream arg1) throws SQLException {
+	public void updateBinaryStream(int arg0, InputStream arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBinaryStream(String arg0, InputStream arg1) throws SQLException {
+	public void updateBinaryStream(String arg0, InputStream arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBinaryStream(int arg0, InputStream arg1, int arg2) throws SQLException {
+	public void updateBinaryStream(int arg0, InputStream arg1, int arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBinaryStream(String arg0, InputStream arg1, int arg2) throws SQLException {
+	public void updateBinaryStream(String arg0, InputStream arg1, int arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBinaryStream(int arg0, InputStream arg1, long arg2) throws SQLException {
+	public void updateBinaryStream(int arg0, InputStream arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBinaryStream(String arg0, InputStream arg1, long arg2) throws SQLException {
+	public void updateBinaryStream(String arg0, InputStream arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBlob(int arg0, Blob arg1) throws SQLException {
+	public void updateBlob(int arg0, Blob arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBlob(String arg0, Blob arg1) throws SQLException {
+	public void updateBlob(String arg0, Blob arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBlob(int arg0, InputStream arg1) throws SQLException {
+	public void updateBlob(int arg0, InputStream arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBlob(String arg0, InputStream arg1) throws SQLException {
+	public void updateBlob(String arg0, InputStream arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBlob(int arg0, InputStream arg1, long arg2) throws SQLException {
+	public void updateBlob(int arg0, InputStream arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBlob(String arg0, InputStream arg1, long arg2) throws SQLException {
+	public void updateBlob(String arg0, InputStream arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBoolean(int arg0, boolean arg1) throws SQLException {
+	public void updateBoolean(int arg0, boolean arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBoolean(String arg0, boolean arg1) throws SQLException {
+	public void updateBoolean(String arg0, boolean arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateByte(int arg0, byte arg1) throws SQLException {
+	public void updateByte(int arg0, byte arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateByte(String arg0, byte arg1) throws SQLException {
+	public void updateByte(String arg0, byte arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBytes(int arg0, byte[] arg1) throws SQLException {
+	public void updateBytes(int arg0, byte[] arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateBytes(String arg0, byte[] arg1) throws SQLException {
+	public void updateBytes(String arg0, byte[] arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateCharacterStream(int arg0, Reader arg1) throws SQLException {
+	public void updateCharacterStream(int arg0, Reader arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateCharacterStream(String arg0, Reader arg1) throws SQLException {
+	public void updateCharacterStream(String arg0, Reader arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateCharacterStream(int arg0, Reader arg1, int arg2) throws SQLException {
+	public void updateCharacterStream(int arg0, Reader arg1, int arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateCharacterStream(String arg0, Reader arg1, int arg2) throws SQLException {
+	public void updateCharacterStream(String arg0, Reader arg1, int arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateCharacterStream(int arg0, Reader arg1, long arg2) throws SQLException {
+	public void updateCharacterStream(int arg0, Reader arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateCharacterStream(String arg0, Reader arg1, long arg2) throws SQLException {
+	public void updateCharacterStream(String arg0, Reader arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateClob(int arg0, Clob arg1) throws SQLException {
+	public void updateClob(int arg0, Clob arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateClob(String arg0, Clob arg1) throws SQLException {
+	public void updateClob(String arg0, Clob arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateClob(int arg0, Reader arg1) throws SQLException {
+	public void updateClob(int arg0, Reader arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateClob(String arg0, Reader arg1) throws SQLException {
+	public void updateClob(String arg0, Reader arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateClob(int arg0, Reader arg1, long arg2) throws SQLException {
+	public void updateClob(int arg0, Reader arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateClob(String arg0, Reader arg1, long arg2) throws SQLException {
+	public void updateClob(String arg0, Reader arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateDate(int arg0, Date arg1) throws SQLException {
+	public void updateDate(int arg0, Date arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateDate(String arg0, Date arg1) throws SQLException {
+	public void updateDate(String arg0, Date arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateDouble(int arg0, double arg1) throws SQLException {
+	public void updateDouble(int arg0, double arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateDouble(String arg0, double arg1) throws SQLException {
+	public void updateDouble(String arg0, double arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateFloat(int arg0, float arg1) throws SQLException {
+	public void updateFloat(int arg0, float arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateFloat(String arg0, float arg1) throws SQLException {
+	public void updateFloat(String arg0, float arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateInt(int arg0, int arg1) throws SQLException {
+	public void updateInt(int arg0, int arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateInt(String arg0, int arg1) throws SQLException {
+	public void updateInt(String arg0, int arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateLong(int arg0, long arg1) throws SQLException {
+	public void updateLong(int arg0, long arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateLong(String arg0, long arg1) throws SQLException {
+	public void updateLong(String arg0, long arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNCharacterStream(int arg0, Reader arg1) throws SQLException {
+	public void updateNCharacterStream(int arg0, Reader arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNCharacterStream(String arg0, Reader arg1) throws SQLException {
+	public void updateNCharacterStream(String arg0, Reader arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNCharacterStream(int arg0, Reader arg1, long arg2) throws SQLException {
+	public void updateNCharacterStream(int arg0, Reader arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNCharacterStream(String arg0, Reader arg1, long arg2) throws SQLException {
+	public void updateNCharacterStream(String arg0, Reader arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNClob(int arg0, NClob arg1) throws SQLException {
+	public void updateNClob(int arg0, NClob arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNClob(String arg0, NClob arg1) throws SQLException {
+	public void updateNClob(String arg0, NClob arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNClob(int arg0, Reader arg1) throws SQLException {
+	public void updateNClob(int arg0, Reader arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNClob(String arg0, Reader arg1) throws SQLException {
+	public void updateNClob(String arg0, Reader arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNClob(int arg0, Reader arg1, long arg2) throws SQLException {
+	public void updateNClob(int arg0, Reader arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNClob(String arg0, Reader arg1, long arg2) throws SQLException {
+	public void updateNClob(String arg0, Reader arg1, long arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNString(int arg0, String arg1) throws SQLException {
+	public void updateNString(int arg0, String arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNString(String arg0, String arg1) throws SQLException {
+	public void updateNString(String arg0, String arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNull(int arg0) throws SQLException {
+	public void updateNull(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNull(String arg0) throws SQLException {
+	public void updateNull(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateObject(int arg0, Object arg1) throws SQLException {
+	public void updateObject(int arg0, Object arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateObject(String arg0, Object arg1) throws SQLException {
+	public void updateObject(String arg0, Object arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateObject(int arg0, Object arg1, int arg2) throws SQLException {
+	public void updateObject(int arg0, Object arg1, int arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateObject(String arg0, Object arg1, int arg2) throws SQLException {
+	public void updateObject(String arg0, Object arg1, int arg2) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRef(int arg0, Ref arg1) throws SQLException {
+	public void updateRef(int arg0, Ref arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRef(String arg0, Ref arg1) throws SQLException {
+	public void updateRef(String arg0, Ref arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRow() throws SQLException {
+	public void updateRow() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRowId(int arg0, RowId arg1) throws SQLException {
+	public void updateRowId(int arg0, RowId arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRowId(String arg0, RowId arg1) throws SQLException {
+	public void updateRowId(String arg0, RowId arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateSQLXML(int arg0, SQLXML arg1) throws SQLException {
+	public void updateSQLXML(int arg0, SQLXML arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateSQLXML(String arg0, SQLXML arg1) throws SQLException {
+	public void updateSQLXML(String arg0, SQLXML arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateShort(int arg0, short arg1) throws SQLException {
+	public void updateShort(int arg0, short arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateShort(String arg0, short arg1) throws SQLException {
+	public void updateShort(String arg0, short arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateString(int arg0, String arg1) throws SQLException {
+	public void updateString(int arg0, String arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateString(String arg0, String arg1) throws SQLException {
+	public void updateString(String arg0, String arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateTime(int arg0, Time arg1) throws SQLException {
+	public void updateTime(int arg0, Time arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateTime(String arg0, Time arg1) throws SQLException {
+	public void updateTime(String arg0, Time arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateTimestamp(int arg0, Timestamp arg1) throws SQLException {
+	public void updateTimestamp(int arg0, Timestamp arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateTimestamp(String arg0, Timestamp arg1) throws SQLException {
+	public void updateTimestamp(String arg0, Timestamp arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean wasNull() throws SQLException {
+	public boolean wasNull() {
 		throw new UnsupportedOperationException();
 	}
 

@@ -10,7 +10,7 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
     private String tableName;
     private Logger log;
 
-    public ResultSetMetaDataImp(Object[][] producedData, DataCarrier columnsInfo, String tableName) {
+     ResultSetMetaDataImp(Object[][] producedData, DataCarrier columnsInfo, String tableName) {
         this.producedData = producedData;
         this.columnsInfo = columnsInfo;
         this.tableName = tableName;

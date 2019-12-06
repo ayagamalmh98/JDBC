@@ -6,10 +6,10 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
 
-public class Logger {
+ class Logger {
 	private static Logger instance;
 
-	public static Logger getInstance() {
+	 static Logger getInstance() {
 		if (Logger.instance == null) {
 			Logger.instance = new Logger();
 		}
