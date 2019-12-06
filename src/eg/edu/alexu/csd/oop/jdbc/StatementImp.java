@@ -110,6 +110,17 @@ public class StatementImp implements Statement {
 		String tablename = executor.getTableName(arg0);
 		DataCarrier columnsinfo = executor.getColumnsInfo(arg0);
 		resultSet = new ResultSetImp(ProducedData, columnsinfo, tablename, this);
+		StringBuilder st = new StringBuilder();
+		for (Object[] obj :ProducedData) {
+			for (int j = 0; j < ProducedData[0].length; j++) {
+
+				
+					st.append(obj[j].toString()).append(" ");
+				
+			}
+			st.append("\n");
+		}
+		System.out.println(st.toString()); 
 		return resultSet;
 	}
 
