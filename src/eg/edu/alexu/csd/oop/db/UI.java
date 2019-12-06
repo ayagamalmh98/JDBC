@@ -27,7 +27,7 @@ public class UI {
 			try {
 				System.out.println(executor.invoke(query));
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 		}
 	}

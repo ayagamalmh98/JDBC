@@ -28,6 +28,15 @@ public class DBMSController {
 
 	public String invoke(String query) throws SQLException {
 		int operation = validator.isValidQuery(query);
+		if(operation==0){
+			boolean test = manager.executeStructureQuery(query);
+			if (test) {
+				return ("Database is active successfully.");
+			} else {
+				return ( "No such a database");
+
+			}
+		}
 		if (operation == 1 || operation == 2) {
 			boolean test = manager.executeStructureQuery(query);
 			if (test) {
@@ -71,7 +80,6 @@ public class DBMSController {
 	}
 
 	public Object[][] invokee(String query) throws SQLException {
-		query = query.toLowerCase();
 		int operation = validator.isValidQuery(query);
 		if ((operation >= 5 && operation <= 8) || operation == 15) {
 			Object[][] test2 = manager.executeQuery(query);
@@ -91,13 +99,12 @@ public class DBMSController {
 			return null;
 		}
 		Table required = activeDB.getTable(getTableName(query));
-		query = query.toLowerCase();
 		DataCarrier carrier;
 		int operation = validator.isValidQuery(query);
 		if (operation < 0) {
 			throw new SQLException("Invalid query");
 		}
-		if (operation == 5) {
+		if (operation == 15) {
 			carrier = DataExtractor.getInstance().selectAllData(query);
 			carrier.columns = required.columnsNames();
 			carrier.columnsTypes = required.columnsTypes();
@@ -109,57 +116,36 @@ public class DBMSController {
 			return carrier;
 		} else if (operation == 7) {
 			carrier = DataExtractor.getInstance().selectSomeData(query);
-			String[] allcolumnNames = required.columnsNames();
-			String[] allcolumnTypes = required.columnsTypes();
-			String[] somecolumnNames = carrier.columns;
-			String[] somecolumnTypes = new String[somecolumnNames.length];
-			for (int i = 0; i < somecolumnNames.length; i++) {
-				for (int j = 0; j < allcolumnNames.length; j++) {
-					if (allcolumnNames[j].equalsIgnoreCase(somecolumnNames[i])) {
-						somecolumnTypes[i] = allcolumnTypes[j];
-					}
-				}
-			}
-			carrier.columnsTypes = somecolumnTypes;
-			return carrier;
+			return getDataCarrier(required, carrier);
 
 		} else if (operation == 8) {
 			carrier = DataExtractor.getInstance().selectSomeWhereData(query);
-			String[] allcolumnNames = required.columnsNames();
-			String[] allcolumnTypes = required.columnsTypes();
-			String[] somecolumnNames = carrier.columns;
-			String[] somecolumnTypes = new String[somecolumnNames.length];
-			for (int i = 0; i < somecolumnNames.length; i++) {
-				for (int j = 0; j < allcolumnNames.length; j++) {
-					if (allcolumnNames[j].equalsIgnoreCase(somecolumnNames[i])) {
-						somecolumnTypes[i] = allcolumnTypes[j];
-					}
-				}
-			}
-			carrier.columnsTypes = somecolumnTypes;
-			return carrier;
-		} else if (operation == 15) {
+			return getDataCarrier(required, carrier);
+		} else if (operation == 5) {
 			carrier = DataExtractor.getInstance().selectAs(query);
-			String[] allcolumnNames = required.columnsNames();
-			String[] allcolumnTypes = required.columnsTypes();
-			String[] somecolumnNames = carrier.columns;
-			String[] somecolumnTypes = new String[somecolumnNames.length];
-			for (int i = 0; i < somecolumnNames.length; i++) {
-				for (int j = 0; j < allcolumnNames.length; j++) {
-					if (allcolumnNames[j].equalsIgnoreCase(somecolumnNames[i])) {
-						somecolumnTypes[i] = allcolumnTypes[j];
-					}
-				}
-			}
-			carrier.columnsTypes = somecolumnTypes;
-			return carrier;
+			return getDataCarrier(required, carrier);
 		}
 		return null;
 	}
 
+	private DataCarrier getDataCarrier(Table required, DataCarrier carrier) throws SQLException {
+		String[] allcolumnNames = required.columnsNames();
+		String[] allcolumnTypes = required.columnsTypes();
+		String[] somecolumnNames = carrier.columns;
+		String[] somecolumnTypes = new String[somecolumnNames.length];
+		for (int i = 0; i < somecolumnNames.length; i++) {
+			for (int j = 0; j < allcolumnNames.length; j++) {
+				if (allcolumnNames[j].equalsIgnoreCase(somecolumnNames[i])) {
+					somecolumnTypes[i] = allcolumnTypes[j];
+				}
+			}
+		}
+		carrier.columnsTypes = somecolumnTypes;
+		return carrier;
+	}
+
 	public String getTableName(String query) throws SQLException {
 		DataCarrier carrier;
-		query = query.toLowerCase();
 		int operation = validator.isValidQuery(query);
 		if (operation < 0) {
 			throw new SQLException("Invalid query");

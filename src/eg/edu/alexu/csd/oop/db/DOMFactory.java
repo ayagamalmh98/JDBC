@@ -2,7 +2,6 @@ package eg.edu.alexu.csd.oop.db;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

@@ -114,7 +114,7 @@ public class DBMS implements Database {
         if (databases.isEmpty()) {
             return null;
         }
-        if (operation == 5) {
+        if (operation == 15) {
             carrier = DataExtractor.getInstance().selectAllData(query);
             if (!activeDB.tableExist(carrier.tableName)) {
                 throw new SQLException("Table " + carrier.tableName + " does not exists in " + activeDB.getName());
@@ -153,7 +153,7 @@ public class DBMS implements Database {
                 throw new SQLException("No such a table");
             }
             return activeDB.getTables().get(activeDB.getTableIndex(carrier.tableName)).selectSomeWhere(carrier);
-        } else if(operation == 15){
+        } else if(operation == 5){
             carrier = DataExtractor.getInstance().selectAs(query);
             if (!activeDB.tableExist(carrier.tableName)) {
                 throw new SQLException("Table " + carrier.tableName + " does not exists in " + activeDB.getName());
