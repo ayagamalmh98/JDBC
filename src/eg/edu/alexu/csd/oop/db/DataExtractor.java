@@ -17,7 +17,7 @@ class DataExtractor {
     private String selectAllWherePattern = "(\\A)(?i)(\\s*)(select)(\\s*)[*](\\s*)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
     private String selectSomePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
     private String selectSomeWherePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
-    private String selectAsPattern ="(\\A)(?i)(\\s*)(select)(\\s+)((((\\s*)(\\w+)(\\s+)(as)(\\s+)(\\w+)(\\s*)[,](\\s*))*(\\s*)(\\w+)(\\s+)(as)(\\s+)(\\w+)(\\s+)))(from)(\\s+)(\\w+)(\\s*)(?-i)([;])?(\\s*)";
+    private String selectAsPattern ="(\\A)(?i)(\\s*)(select)(\\s+)((((\\s*)(\\w+)(\\s+)((as)(\\s+)(\\w+)(\\s*)[,](\\s*)))*?(\\s*)(\\w+)(\\s+)((as)(\\s+)(\\w+)(\\s+))?))(from)(\\s+)(\\w+)(\\s*)(?-i)([;])?(\\s*)";
     private String createDBPattern = "(\\A)(?i)(\\s*)(create)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
     private String createTablePattern = "(\\A)(?i)(\\s*)(create)(\\s+)(table)(\\s+)(\\w+)(\\s*)[(](((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s+)((varchar)|(int))(\\s*)))[)](\\s*)(?-i)(\\z)";
     private String dropDBPattern = "(\\A)(?i)(\\s*)(drop)(\\s+)(database)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
@@ -229,13 +229,16 @@ class DataExtractor {
         Pattern pat = Pattern.compile(selectAsPattern);
         Matcher mat = pat.matcher(query);
         if (mat.matches()) {
-            toBeReturn.tableName = mat.group(25);
+            toBeReturn.tableName = mat.group(27);
             String [] split = mat.group(6).split("(\\s*)[,](\\s*)");
             String [] columns= new String[split.length];
             String [] values = new String[split.length];
             for (int i =0;i<split.length;i++){
                 columns[i]= split[i].split("(\\s*)[A|a][s|S](\\s*)")[0];
-                values[i]= split[i].split("(\\s*)[A|a][s|S](\\s*)")[1];
+                if(split[i].split("(\\s*)[A|a][s|S](\\s*)").length == 1)
+                    values[i]= null;
+                else
+                    values[i]= split[i].split("(\\s*)[A|a][s|S](\\s*)")[1];
 
             }
             toBeReturn.columns=columns;
