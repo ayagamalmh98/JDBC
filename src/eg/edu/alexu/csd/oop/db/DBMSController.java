@@ -27,7 +27,6 @@ public class DBMSController {
 	}
 
 	public String invoke(String query) throws SQLException {
-		query = query.toLowerCase();
 		int operation = validator.isValidQuery(query);
 		if (operation == 1 || operation == 2) {
 			boolean test = manager.executeStructureQuery(query);
@@ -44,7 +43,7 @@ public class DBMSController {
 			} else {
 				return ((operation == 3 ? "Database" : "Table") + " wasn't dropped successfully.");
 			}
-		} else if (operation >= 5 && operation <= 8) {
+		} else if (operation >= 5 && operation <= 8 || operation == 15) {
 			Object[][] test2 = manager.executeQuery(query);
 			if (test2 == null) {
 				return "Wrong selection!!";
@@ -65,7 +64,6 @@ public class DBMSController {
 			throw new SQLException("Not a valid SQL query!");
 		}
 	}
-	
 	
 	public Object[][] invokee(String query) throws SQLException {
 		query = query.toLowerCase();
@@ -138,8 +136,6 @@ public class DBMSController {
 		}
 		return null;
 	}
-	
-	
 
 	public String getTableName(String query) throws SQLException {
 		DataCarrier carrier;
@@ -165,3 +161,20 @@ public class DBMSController {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
