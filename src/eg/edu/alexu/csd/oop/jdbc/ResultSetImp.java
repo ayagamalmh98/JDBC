@@ -26,7 +26,7 @@ import eg.edu.alexu.csd.oop.db.DataCarrier;
 
 public class ResultSetImp implements ResultSet {
 
-	private logger logger;
+	private Logger log;
 	private boolean close;
 	private int rows;
 	private int Columns;
@@ -34,20 +34,20 @@ public class ResultSetImp implements ResultSet {
 	private int ColumnCursor;
 	private StatementImp statement;
 	private DataCarrier ColumnsInfo;
-	private Object[][] ProducedData;
+	private Object[][] ProductedData;
 	private String tableName;
 	
-	public ResultSetImp(Object[][] ProducedData, DataCarrier ColumnsInfo, String tableName, StatementImp statement) {
-		logger = logger.getInstance();
-		logger.log.info("Building ResultSet object.");
+	public ResultSetImp(Object[][] ProductedData, DataCarrier ColumnsInfo, String tableName, StatementImp statement) {
+		log = Logger.getInstance();
+		log.log.info("Building ResultSet object.");
 		this.statement = statement;
 		this.ColumnsInfo = ColumnsInfo;
-		this.ProducedData = ProducedData;
+		this.ProductedData = ProductedData;
 		this.tableName = tableName;
 		close = false;
-		rows = ProducedData.length;
-		if (ProducedData.length != 0 && ProducedData[0] != null) {
-			Columns = ProducedData[0].length;
+		rows = ProductedData.length;
+		if (ProductedData.length != 0 && ProductedData[0] != null) {
+			Columns = ProductedData[0].length;
 		} else {
 			Columns = 0;
 		}
@@ -70,10 +70,10 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public boolean absolute(int row) throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
 		}
-		logger.log.info("Moving to the absolute row " + row);
+		log.log.info("Moving to the absolute row " + row);
 		if (row > 0) {
 			RowCursor = row;
 		} else if (row < 0) {
@@ -87,10 +87,10 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public void afterLast() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
-		logger.log.info("Moving to after Last row.");
+		log.log.info("Moving to after Last row.");
 		if (rows != 0) {
 			RowCursor = rows + 1;
 		}
@@ -99,10 +99,10 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public void beforeFirst() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
-		logger.log.info("Moving to before First row.");
+		log.log.info("Moving to before First row.");
 		RowCursor = 0;
 	}
 
@@ -119,11 +119,11 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public void close() throws SQLException {
 		if (!close) {
-			logger.log.warning("Closing ResultSet.");
+			log.log.warning("Closing ResultSet.");
 			close = true;
-			ProducedData = null;
+			ProductedData = null;
 		}
-		logger.log.warning("ResultSet is alraedy closed.");
+		log.log.warning("ResultSet is alraedy closed.");
 		throw new SQLException("ResultSet is already closed.");
 	}
 
@@ -135,22 +135,22 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public int findColumn(String columnLabel) throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
 		if (columnLabel == null) {
-			logger.log.warning("column Label is null.");
+			log.log.warning("column Label is null.");
 			throw new SQLException("column Label is null.");
 		} else {
 			String[] names = ColumnsInfo.columns;
 			for (int i = 0; i < names.length; i++) {
 				if (columnLabel.equalsIgnoreCase(names[i])) {
 					ColumnCursor = i;
-					logger.log.info("The index of " + columnLabel + "is" + ColumnCursor);
+					log.log.info("The index of " + columnLabel + "is" + ColumnCursor);
 					return ColumnCursor;
 				}
 			}
-			logger.log.warning("The given Column Label doesn't exist in ResultSet");
+			log.log.warning("The given Column Label doesn't exist in ResultSet");
 			throw new SQLException("The given Column Label doesn't exist in ResultSet");
 		}
 	}
@@ -158,10 +158,10 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public boolean first() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
-		logger.log.info("Moving to First row.");
+		log.log.info("Moving to First row.");
 		RowCursor = 1;
 		return rows != 0;
 	}
@@ -247,17 +247,17 @@ public class ResultSetImp implements ResultSet {
 	}
 
 	@Override
-	public byte[] getBytes(int arg0) {
+	public byte[] getBytes(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public byte[] getBytes(String arg0){
+	public byte[] getBytes(String arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Reader getCharacterStream(int arg0) {
+	public Reader getCharacterStream(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
@@ -344,24 +344,25 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public int getInt(int columnIndex) throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
-		logger.log.info("Fetching the value of the designated column at" + columnIndex);
+		log.log.info("Fetching the value of the designated column at" + columnIndex);
 		if (columnIndex > Columns) {
-			logger.log.info("Given column index that exceeds the number of Columns.");
+			log.log.info("Given column index that exceeds the number of Columns.");
 			throw new SQLException("Invalid column index.");
 		}
 		if (isAfterLast() || isBeforeFirst()) {
 			throw new SQLException();
 		}
-		Object x = ProducedData[RowCursor - 1][columnIndex - 1];
+		Object x = ProductedData[RowCursor - 1][columnIndex - 1];
 		if (x instanceof String) {
 			String y = (String) x;
 			if (y.equalsIgnoreCase("null")) {
 				return 0;
 			}
 		}
+		//see later
 		int op = (Integer) x;
 		return op;
 	}
@@ -384,10 +385,10 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
-		return new ResultSetMetaDataImp(ProducedData, ColumnsInfo, tableName);
+		return new ResultSetMetaDataImp(ProductedData, ColumnsInfo, tableName);
 	}
 
 	@Override
@@ -423,18 +424,18 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public Object getObject(int columnIndex) throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
 		if (columnIndex > Columns) {
-			logger.log.info("Given column index that exceeds the number of Columns.");
+			log.log.info("Given column index that exceeds the number of Columns.");
 			throw new SQLException("Invalid column index.");
 		}
 		if (isAfterLast() || isBeforeFirst()) {
 			throw new RuntimeException();
 		}
-		logger.log.info("Fetching the value of the designated column at " + columnIndex);
-		Object x = ProducedData[RowCursor - 1][columnIndex - 1];
+		log.log.info("Fetching the value of the designated column at " + columnIndex);
+		Object x = ProductedData[RowCursor - 1][columnIndex - 1];
 		if (x instanceof String) {
 			String y = (String) x;
 			if (y.equalsIgnoreCase("null")) {
@@ -521,7 +522,7 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public Statement getStatement() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
 		return statement;
@@ -530,24 +531,25 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public String getString(int columnIndex) throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
 			throw new SQLException("ResultSet is closed.");
 		}
 		if (columnIndex > Columns) {
-			logger.log.info("Given invalid column index to getString.");
+			log.log.info("Given invalid column index to getString.");
 			throw new SQLException("Invalid column index.");
 		}
 		if (isAfterLast() || isBeforeFirst()) {
 			throw new SQLException();
 		}
-		logger.log.info("Fetching the value of the designated column at  " + columnIndex);
-		Object x = ProducedData[RowCursor - 1][columnIndex - 1];
+		log.log.info("Fetching the value of the designated column at  " + columnIndex);
+		Object x = ProductedData[RowCursor - 1][columnIndex - 1];
 		if (x instanceof String) {
 			final String y = (String) x;
 			if (y.equalsIgnoreCase("null")) {
 				return null;
 			}
 		}
+		//see later
 		String op = (String) x;
 		return op;
 
@@ -636,8 +638,8 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public boolean isAfterLast() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
 		}
 		return RowCursor == rows + 1;
 	}
@@ -645,22 +647,22 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public boolean isBeforeFirst() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
 		}
 		return RowCursor == 0;
 	}
 
 	@Override
-	public boolean isClosed() throws SQLException {
+	public boolean isClosed()  {
 		return close;
 	}
 
 	@Override
 	public boolean isFirst() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
 		}
 		return RowCursor == 1;
 	}
@@ -668,8 +670,8 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public boolean isLast() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
 		}
 		return RowCursor == rows;
 	}
@@ -677,10 +679,10 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public boolean last() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
 		}
-		logger.log.info("Moving to last row.");
+		log.log.info("Moving to last row.");
 		RowCursor = rows;
 		return rows != 0;
 	}
@@ -698,10 +700,10 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public boolean next() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
 		}
-		logger.log.info("Moving forward one row.");
+		log.log.info("Moving forward one row.");
 		RowCursor++;
 		return !isAfterLast();
 	}
@@ -709,10 +711,10 @@ public class ResultSetImp implements ResultSet {
 	@Override
 	public boolean previous() throws SQLException {
 		if (close) {
-			logger.log.warning("ResultSet is closed.");
-			throw new SQLException("ResultSet is closed.");
+			log.log.warning("ResultSet is closed.");
+			throw new SQLException("Resultset is closed.");
 		}
-		logger.log.info("Moving backwards one row.");
+		log.log.info("Moving backwards one row.");
 		RowCursor--;
 		return !isBeforeFirst();
 	}
@@ -1043,132 +1045,132 @@ public class ResultSetImp implements ResultSet {
 	}
 
 	@Override
-	public void updateNClob(int arg0, Reader arg1, long arg2) {
+	public void updateNClob(int arg0, Reader arg1, long arg2)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNClob(String arg0, Reader arg1, long arg2) {
+	public void updateNClob(String arg0, Reader arg1, long arg2)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNString(int arg0, String arg1) {
+	public void updateNString(int arg0, String arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNString(String arg0, String arg1) {
+	public void updateNString(String arg0, String arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNull(int arg0) {
+	public void updateNull(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateNull(String arg0) {
+	public void updateNull(String arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateObject(int arg0, Object arg1) {
+	public void updateObject(int arg0, Object arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateObject(String arg0, Object arg1) {
+	public void updateObject(String arg0, Object arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateObject(int arg0, Object arg1, int arg2) {
+	public void updateObject(int arg0, Object arg1, int arg2)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateObject(String arg0, Object arg1, int arg2) {
+	public void updateObject(String arg0, Object arg1, int arg2)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRef(int arg0, Ref arg1) {
+	public void updateRef(int arg0, Ref arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRef(String arg0, Ref arg1) {
+	public void updateRef(String arg0, Ref arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRow() {
+	public void updateRow()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRowId(int arg0, RowId arg1) {
+	public void updateRowId(int arg0, RowId arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateRowId(String arg0, RowId arg1) {
+	public void updateRowId(String arg0, RowId arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateSQLXML(int arg0, SQLXML arg1) {
+	public void updateSQLXML(int arg0, SQLXML arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateSQLXML(String arg0, SQLXML arg1) {
+	public void updateSQLXML(String arg0, SQLXML arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateShort(int arg0, short arg1) {
+	public void updateShort(int arg0, short arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateShort(String arg0, short arg1) {
+	public void updateShort(String arg0, short arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateString(int arg0, String arg1) {
+	public void updateString(int arg0, String arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateString(String arg0, String arg1) {
+	public void updateString(String arg0, String arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateTime(int arg0, Time arg1) {
+	public void updateTime(int arg0, Time arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateTime(String arg0, Time arg1) {
+	public void updateTime(String arg0, Time arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateTimestamp(int arg0, Timestamp arg1) {
+	public void updateTimestamp(int arg0, Timestamp arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void updateTimestamp(String arg0, Timestamp arg1) {
+	public void updateTimestamp(String arg0, Timestamp arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean wasNull() {
+	public boolean wasNull()  {
 		throw new UnsupportedOperationException();
 	}
 

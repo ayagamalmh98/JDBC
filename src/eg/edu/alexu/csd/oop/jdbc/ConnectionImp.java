@@ -8,8 +8,6 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.NClob;
 import java.sql.PreparedStatement;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Savepoint;
@@ -252,12 +250,12 @@ public class ConnectionImp implements Connection{
 	}
 
 	@Override
-	public void setClientInfo(Properties arg0)  {
+	public void setClientInfo(Properties arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setClientInfo(String arg0, String arg1)  {
+	public void setClientInfo(String arg0, String arg1) {
 		throw new UnsupportedOperationException();
 	}
 

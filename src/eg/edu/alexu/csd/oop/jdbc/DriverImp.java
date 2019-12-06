@@ -27,7 +27,7 @@ public class DriverImp implements Driver {
     }
 
     @Override
-    public Connection connect(String url, Properties info) {
+    public Connection connect(String url, Properties info){
         File path1 = (File) info.get("path");
         String path = path1.getAbsolutePath();
         return new ConnectionImp(url, path);
@@ -58,7 +58,7 @@ public class DriverImp implements Driver {
     }
 
     @Override
-    public Logger getParentLogger() {
+    public Logger getParentLogger()  {
         throw new UnsupportedOperationException();
     }
 
