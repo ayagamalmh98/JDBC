@@ -28,6 +28,15 @@ public class DBMSController {
 
 	public String invoke(String query) throws SQLException {
 		int operation = validator.isValidQuery(query);
+		if(operation==0){
+			boolean test = manager.executeStructureQuery(query);
+			if (test) {
+				return ("Database is active successfully.");
+			} else {
+				return ( "No such a database");
+
+			}
+		}
 		if (operation == 1 || operation == 2) {
 			boolean test = manager.executeStructureQuery(query);
 			if (test) {
@@ -43,7 +52,7 @@ public class DBMSController {
 			} else {
 				return ((operation == 3 ? "Database" : "Table") + " wasn't dropped successfully.");
 			}
-		} else if ((operation >= 5 && operation <= 8) || operation == 15) {
+		} else if (operation >= 5 && operation <= 8 || operation == 15) {
 			Object[][] test2 = manager.executeQuery(query);
 			if (test2 == null) {
 				return "Wrong selection!!";
@@ -51,7 +60,11 @@ public class DBMSController {
 				StringBuilder st = new StringBuilder();
 				for (Object[] objects : test2) {
 					for (int j = 0; j < test2[0].length; j++) {
-						st.append(objects[j].toString()).append(" ");
+						if (objects[j]==null){
+							st.append("|");
+						}else {
+							st.append(objects[j].toString()).append("|");
+						}
 					}
 					st.append("\n");
 				}
@@ -64,11 +77,11 @@ public class DBMSController {
 			throw new SQLException("Not a valid SQL query!");
 		}
 	}
-
+	
 	public Object[][] invokee(String query) throws SQLException {
 		query = query.toLowerCase();
 		int operation = validator.isValidQuery(query);
-		if ((operation >= 5 && operation <= 8) || operation == 15) {
+		if (operation >= 5 && operation <= 8) {
 			Object[][] test2 = manager.executeQuery(query);
 			if (test2 == null) {
 				return null;
@@ -82,7 +95,7 @@ public class DBMSController {
 
 	public DataCarrier getColumnsInfo(String query) throws SQLException {
 		DB activeDB = ((DBMS) manager).getactiveDB();
-		if (activeDB == null) {
+		if(activeDB==null) {
 			return null;
 		}
 		Table required = activeDB.getTable(getTableName(query));
@@ -133,21 +146,6 @@ public class DBMSController {
 			}
 			carrier.columnsTypes = somecolumnTypes;
 			return carrier;
-		} else if (operation == 15) {
-			carrier = DataExtractor.getInstance().selectAs(query);
-			String[] allcolumnNames = required.columnsNames();
-			String[] allcolumnTypes = required.columnsTypes();
-			String[] somecolumnNames = carrier.columns;
-			String[] somecolumnTypes = new String[somecolumnNames.length];
-			for (int i = 0; i < somecolumnNames.length; i++) {
-				for (int j = 0; j < allcolumnNames.length; j++) {
-					if (allcolumnNames[j].equalsIgnoreCase(somecolumnNames[i])) {
-						somecolumnTypes[i] = allcolumnTypes[j];
-					}
-				}
-			}
-			carrier.columnsTypes = somecolumnTypes;
-			return carrier;
 		}
 		return null;
 	}
@@ -171,11 +169,25 @@ public class DBMSController {
 		} else if (operation == 8) {
 			carrier = DataExtractor.getInstance().selectSomeWhereData(query);
 			return carrier.tableName;
-		} else if (operation == 15) {
-			carrier = DataExtractor.getInstance().selectAs(query);
-			return carrier.tableName;
 		}
 		return null;
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -14,7 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
- class Table {
+class Table {
     private File dataFile;
     private File schemaFile;
 
@@ -53,7 +53,7 @@ import javax.xml.parsers.ParserConfigurationException;
         }
     }
 
-     int insertAll(DataCarrier carrier) throws SQLException {
+    int insertAll(DataCarrier carrier) throws SQLException {
         carrier.columns = columnsNames();
         return insertSome(carrier);
     }
@@ -70,7 +70,11 @@ import javax.xml.parsers.ParserConfigurationException;
             for (int i = 0; i < rows.getLength(); i++) {
                 if (where(carrier, rows.item(i))) {
                     for (int j = 0; j < carrier.columns.length; j++) {
-                        rows.item(i).getAttributes().getNamedItem(carrier.columns[j]).setNodeValue(carrier.values[j]);
+                        if (rows.item(i).getAttributes().getNamedItem(carrier.columns[j]) == null) {
+                            ((Element) rows.item(i)).setAttribute(carrier.columns[j], carrier.values[j]);
+                        } else {
+                            rows.item(i).getAttributes().getNamedItem(carrier.columns[j]).setNodeValue(carrier.values[j]);
+                        }
                     }
                     counter++;
                 }
@@ -94,7 +98,11 @@ import javax.xml.parsers.ParserConfigurationException;
             NodeList rows = doc.getElementsByTagName("row");
             for (int i = 0; i < rows.getLength(); i++) {
                 for (int j = 0; j < carrier.columns.length; j++) {
-                    rows.item(i).getAttributes().getNamedItem(carrier.columns[j]).setNodeValue(carrier.values[j]);
+                    if (rows.item(i).getAttributes().getNamedItem(carrier.columns[j]) == null) {
+                        ((Element) rows.item(i)).setAttribute(carrier.columns[j], carrier.values[j]);
+                    } else {
+                        rows.item(i).getAttributes().getNamedItem(carrier.columns[j]).setNodeValue(carrier.values[j]);
+                    }
                 }
                 counter++;
             }
@@ -131,7 +139,7 @@ import javax.xml.parsers.ParserConfigurationException;
             checkDataFile(doc, "Bad data File !");
             NodeList rows = doc.getElementsByTagName("row");
             int size = rows.getLength();
-            while (rows.getLength()>0){
+            while (rows.getLength() > 0) {
                 doc.getDocumentElement().removeChild(rows.item(0));
             }
             DOMFactory.writeDOMtoFile(doc, dataFile);
@@ -188,9 +196,9 @@ import javax.xml.parsers.ParserConfigurationException;
         }
 
     }
-    
-    Object[][] selectAs(DataCarrier carrier) throws SQLException{
-       return selectSome(carrier);
+
+    Object[][] selectAs(DataCarrier carrier) throws SQLException {
+        return selectSome(carrier);
     }
 
     Object[][] selectSomeWhere(DataCarrier carrier) throws SQLException {
@@ -209,7 +217,7 @@ import javax.xml.parsers.ParserConfigurationException;
                     }
                 }
             }
-            ArrayList<Object[]> toBeReturn=new ArrayList<>();
+            ArrayList<Object[]> toBeReturn = new ArrayList<>();
             for (Object[] objects : table) {
                 boolean flag = false;
                 for (Object object : objects) {
@@ -229,6 +237,10 @@ import javax.xml.parsers.ParserConfigurationException;
     }
 
     private void selectRow(DataCarrier carrier, NodeList rows, Object[][] table, int i, int j) throws SQLException {
+        if (rows.item(j).getAttributes().getNamedItem(carrier.columns[i]) == null) {
+            table[j][i] = null;
+            return;
+        }
         if (isColumnInteger(carrier.columns[i])) {
             table[j][i] = Integer.parseInt(rows.item(j).getAttributes().getNamedItem(carrier.columns[i]).getNodeValue());
         } else {
@@ -243,6 +255,9 @@ import javax.xml.parsers.ParserConfigurationException;
     }
 
     private boolean where(DataCarrier carrier, Node row) throws SQLException {
+        if (row.getAttributes().getNamedItem(carrier.conditionColumn) == null) {
+            return false;
+        }
         if (!isColumnInteger(carrier.conditionColumn) || !isInt(carrier.conditionValue)) {
             switch (carrier.conditionOperator) {
                 case '=':
@@ -344,7 +359,7 @@ import javax.xml.parsers.ParserConfigurationException;
         }
 
     }
-    
+
     String[] columnsTypes() throws SQLException {
         Document doc = DOMFactory.getDomObj(schemaFile);
         if (doc != null) {

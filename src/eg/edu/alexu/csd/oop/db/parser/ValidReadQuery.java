@@ -14,7 +14,7 @@ public class ValidReadQuery implements Parser {
     }
 
 
-      private int selectIsValid(String query) {
+    private int selectIsValid(String query) {
         return Math.max(Math.max(regexMatcher(query, selectAllPattern) ? 5 : -1, regexMatcher(query, selectAllWherePattern) ? 6 : -1),Math.max(Math.max(regexMatcher(query, selectSomePattern) ? 7 : -1, regexMatcher(query, selectSomeWherePattern) ? 8 : -1),regexMatcher(query,selectAsPattern)?15:-1));
     }
 

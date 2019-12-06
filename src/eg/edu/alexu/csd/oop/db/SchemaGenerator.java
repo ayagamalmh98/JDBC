@@ -60,7 +60,6 @@ import java.sql.SQLException;
             rowType.appendChild(rowSequence);
             for (int i = 0; i < carrier.columns.length; i++) {
                 Element element = elMaker.createElement("attribute", carrier.columns[i], carrier.columnsTypes[i]);
-                element.setAttribute("use", "required");
                 rowType.appendChild(element);
             }
             TransformerFactory tFactory = TransformerFactory.newInstance();
