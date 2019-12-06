@@ -14,7 +14,7 @@ public class StatementImp implements Statement {
 
 	private logger logger;
 	private ConnectionImp connection;
-	private ResultsetImp resultSet;
+	private ResultSetImp resultSet;
 	private ArrayList<String> batches;
 	private Object[][] ProducedData;
 	private int time = 0;
@@ -111,7 +111,7 @@ public class StatementImp implements Statement {
 		Object[][] ProducedData = executor.invokee(arg0);
 		String tablename = executor.getTableName(arg0);
 		DataCarrier columnsinfo = executor.getColumnsInfo(arg0);
-		resultSet = new ResultsetImp(ProducedData, columnsinfo, tablename, this);
+		resultSet = new ResultSetImp(ProducedData, columnsinfo, tablename, this);
 		return resultSet;
 	}
 
@@ -192,167 +192,167 @@ public class StatementImp implements Statement {
 	}
 
 	@Override
-	public int getUpdateCount() throws SQLException {
+	public int getUpdateCount()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+	public boolean isWrapperFor(Class<?> iface)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public <T> T unwrap(Class<T> iface) throws SQLException {
+	public <T> T unwrap(Class<T> iface)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void cancel() throws SQLException {
+	public void cancel()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void clearWarnings() throws SQLException {
+	public void clearWarnings()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void closeOnCompletion() throws SQLException {
+	public void closeOnCompletion()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean execute(String arg0, int arg1) throws SQLException {
+	public boolean execute(String arg0, int arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean execute(String arg0, int[] arg1) throws SQLException {
+	public boolean execute(String arg0, int[] arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean execute(String arg0, String[] arg1) throws SQLException {
+	public boolean execute(String arg0, String[] arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int executeUpdate(String arg0, int arg1) throws SQLException {
+	public int executeUpdate(String arg0, int arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int executeUpdate(String arg0, int[] arg1) throws SQLException {
+	public int executeUpdate(String arg0, int[] arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int executeUpdate(String arg0, String[] arg1) throws SQLException {
+	public int executeUpdate(String arg0, String[] arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getFetchDirection() throws SQLException {
+	public int getFetchDirection()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getFetchSize() throws SQLException {
+	public int getFetchSize()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ResultSet getGeneratedKeys() throws SQLException {
+	public ResultSet getGeneratedKeys()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getMaxFieldSize() throws SQLException {
+	public int getMaxFieldSize()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getMaxRows() throws SQLException {
+	public int getMaxRows()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean getMoreResults() throws SQLException {
+	public boolean getMoreResults()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean getMoreResults(int arg0) throws SQLException {
+	public boolean getMoreResults(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getResultSetConcurrency() throws SQLException {
+	public int getResultSetConcurrency()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getResultSetHoldability() throws SQLException {
+	public int getResultSetHoldability()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getResultSetType() throws SQLException {
+	public int getResultSetType()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SQLWarning getWarnings() throws SQLException {
+	public SQLWarning getWarnings()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isCloseOnCompletion() throws SQLException {
+	public boolean isCloseOnCompletion()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isClosed() throws SQLException {
+	public boolean isClosed()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isPoolable() throws SQLException {
+	public boolean isPoolable()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setCursorName(String arg0) throws SQLException {
+	public void setCursorName(String arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setEscapeProcessing(boolean arg0) throws SQLException {
+	public void setEscapeProcessing(boolean arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setFetchDirection(int arg0) throws SQLException {
+	public void setFetchDirection(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setFetchSize(int arg0) throws SQLException {
+	public void setFetchSize(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setMaxFieldSize(int arg0) throws SQLException {
+	public void setMaxFieldSize(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setMaxRows(int arg0) throws SQLException {
+	public void setMaxRows(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setPoolable(boolean arg0) throws SQLException {
+	public void setPoolable(boolean arg0)  {
 		throw new UnsupportedOperationException();
 	}
 

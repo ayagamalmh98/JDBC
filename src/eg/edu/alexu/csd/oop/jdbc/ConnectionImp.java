@@ -25,279 +25,279 @@ public class ConnectionImp implements Connection{
 		//set current database to the given path :"|
 	}
 	@Override
-	public void close() throws SQLException {
+	public void close()  {
 		statement=null;
 		
 	}
 	@Override
-	public Statement createStatement() throws SQLException {
+	public Statement createStatement()  {
 		 statement = new StatementImp(this);
 	        return statement;
 	}
 
 	@Override
-	public Statement createStatement(int arg0, int arg1) throws SQLException {
+	public Statement createStatement(int arg0, int arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Statement createStatement(int arg0, int arg1, int arg2) throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	
-
-	@Override
-	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public <T> T unwrap(Class<T> arg0) throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void abort(Executor arg0) throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void clearWarnings() throws SQLException {
+	public Statement createStatement(int arg0, int arg1, int arg2)  {
 		throw new UnsupportedOperationException();
 	}
 
 	
 
 	@Override
-	public void commit() throws SQLException {
+	public boolean isWrapperFor(Class<?> arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Array createArrayOf(String arg0, Object[] arg1) throws SQLException {
+	public <T> T unwrap(Class<T> arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Blob createBlob() throws SQLException {
+	public void abort(Executor arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Clob createClob() throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public NClob createNClob() throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public SQLXML createSQLXML() throws SQLException {
+	public void clearWarnings()  {
 		throw new UnsupportedOperationException();
 	}
 
 	
 
 	@Override
-	public Struct createStruct(String arg0, Object[] arg1) throws SQLException {
+	public void commit()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean getAutoCommit() throws SQLException {
+	public Array createArrayOf(String arg0, Object[] arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String getCatalog() throws SQLException {
+	public Blob createBlob()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Properties getClientInfo() throws SQLException {
+	public Clob createClob()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String getClientInfo(String arg0) throws SQLException {
+	public NClob createNClob()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getHoldability() throws SQLException {
+	public SQLXML createSQLXML()  {
+		throw new UnsupportedOperationException();
+	}
+
+	
+
+	@Override
+	public Struct createStruct(String arg0, Object[] arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public DatabaseMetaData getMetaData() throws SQLException {
+	public boolean getAutoCommit()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getNetworkTimeout() throws SQLException {
+	public String getCatalog()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String getSchema() throws SQLException {
+	public Properties getClientInfo()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getTransactionIsolation() throws SQLException {
+	public String getClientInfo(String arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Map<String, Class<?>> getTypeMap() throws SQLException {
+	public int getHoldability()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SQLWarning getWarnings() throws SQLException {
+	public DatabaseMetaData getMetaData()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isClosed() throws SQLException {
+	public int getNetworkTimeout()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isReadOnly() throws SQLException {
+	public String getSchema()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isValid(int arg0) throws SQLException {
+	public int getTransactionIsolation()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String nativeSQL(String arg0) throws SQLException {
+	public Map<String, Class<?>> getTypeMap()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public CallableStatement prepareCall(String arg0) throws SQLException {
+	public SQLWarning getWarnings()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public CallableStatement prepareCall(String arg0, int arg1, int arg2) throws SQLException {
+	public boolean isClosed()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public CallableStatement prepareCall(String arg0, int arg1, int arg2, int arg3) throws SQLException {
+	public boolean isReadOnly()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public PreparedStatement prepareStatement(String arg0) throws SQLException {
+	public boolean isValid(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public PreparedStatement prepareStatement(String arg0, int arg1) throws SQLException {
+	public String nativeSQL(String arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public PreparedStatement prepareStatement(String arg0, int[] arg1) throws SQLException {
+	public CallableStatement prepareCall(String arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public PreparedStatement prepareStatement(String arg0, String[] arg1) throws SQLException {
+	public CallableStatement prepareCall(String arg0, int arg1, int arg2)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public PreparedStatement prepareStatement(String arg0, int arg1, int arg2) throws SQLException {
+	public CallableStatement prepareCall(String arg0, int arg1, int arg2, int arg3)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public PreparedStatement prepareStatement(String arg0, int arg1, int arg2, int arg3) throws SQLException {
+	public PreparedStatement prepareStatement(String arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void releaseSavepoint(Savepoint arg0) throws SQLException {
+	public PreparedStatement prepareStatement(String arg0, int arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void rollback() throws SQLException {
+	public PreparedStatement prepareStatement(String arg0, int[] arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void rollback(Savepoint arg0) throws SQLException {
+	public PreparedStatement prepareStatement(String arg0, String[] arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setAutoCommit(boolean arg0) throws SQLException {
+	public PreparedStatement prepareStatement(String arg0, int arg1, int arg2)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setCatalog(String arg0) throws SQLException {
+	public PreparedStatement prepareStatement(String arg0, int arg1, int arg2, int arg3)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setClientInfo(Properties arg0) throws SQLClientInfoException {
+	public void releaseSavepoint(Savepoint arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setClientInfo(String arg0, String arg1) throws SQLClientInfoException {
+	public void rollback()  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setHoldability(int arg0) throws SQLException {
+	public void rollback(Savepoint arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setNetworkTimeout(Executor arg0, int arg1) throws SQLException {
+	public void setAutoCommit(boolean arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setReadOnly(boolean arg0) throws SQLException {
+	public void setCatalog(String arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Savepoint setSavepoint() throws SQLException {
+	public void setClientInfo(Properties arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Savepoint setSavepoint(String arg0) throws SQLException {
+	public void setClientInfo(String arg0, String arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setSchema(String arg0) throws SQLException {
+	public void setHoldability(int arg0)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setTransactionIsolation(int arg0) throws SQLException {
+	public void setNetworkTimeout(Executor arg0, int arg1)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setTypeMap(Map<String, Class<?>> arg0) throws SQLException {
+	public void setReadOnly(boolean arg0)  {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Savepoint setSavepoint()  {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Savepoint setSavepoint(String arg0)  {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setSchema(String arg0)  {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setTransactionIsolation(int arg0)  {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setTypeMap(Map<String, Class<?>> arg0)  {
 		throw new UnsupportedOperationException();
 	}
 

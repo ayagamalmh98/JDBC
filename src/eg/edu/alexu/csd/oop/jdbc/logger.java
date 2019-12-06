@@ -21,6 +21,7 @@ public class logger {
 
 	private FileHandler fh;
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private logger() {
 		final File f = new File("log.txt");
 		if (!f.exists()) {
