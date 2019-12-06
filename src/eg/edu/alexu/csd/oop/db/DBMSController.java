@@ -150,7 +150,7 @@ public class DBMSController {
 		if (operation < 0) {
 			throw new SQLException("Invalid query");
 		}
-		if (operation == 5) {
+		if (operation == 15) {
 			carrier = DataExtractor.getInstance().selectAllData(query);
 			return carrier.tableName;
 		} else if (operation == 6) {
@@ -162,7 +162,7 @@ public class DBMSController {
 		} else if (operation == 8) {
 			carrier = DataExtractor.getInstance().selectSomeWhereData(query);
 			return carrier.tableName;
-		} else if (operation == 15) {
+		} else if (operation == 5) {
 			carrier = DataExtractor.getInstance().selectAs(query);
 			return carrier.tableName;
 		}
