@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.XMLFormatter;
 
  class Logger {
 	private static Logger instance;
@@ -16,7 +16,7 @@ import java.util.logging.SimpleFormatter;
 		return Logger.instance;
 	}
 
-	 java.util.logging.Logger log;
+	java.util.logging.Logger log;
 
 	private FileHandler fh;
 
@@ -38,9 +38,11 @@ import java.util.logging.SimpleFormatter;
 			e.printStackTrace();
 		} // Appends to log.txt file.
 		log = java.util.logging.Logger.getLogger("MainLog");
-		log.addHandler(fh);
-		fh.setFormatter(new SimpleFormatter());
+		log.setUseParentHandlers(false);
 		log.setLevel(Level.INFO);
+		log.addHandler(fh);
+		fh.setFormatter(new XMLFormatter());
+		
 	}
 
 }
