@@ -8,7 +8,7 @@ public class ValidReadQuery implements Parser {
     private static final String selectAllWherePattern = "(\\A)(?i)(\\s*)(select)(\\s*)[*](\\s*)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
     private static final String selectSomePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s*)(?-i)(\\z)";
     private static final String selectSomeWherePattern = "(\\A)(?i)(\\s*)(select)(\\s+)(((\\s*)(\\w+)(\\s*)[,](\\s*))*((\\s*)(\\w+)(\\s*)))(\\s+)(from)(\\s+)(\\w+)(\\s+)(where)(\\s+)(\\w+)(\\s*)([=<>])(\\s*)(([']([^'])*['])|([0-9]+))(\\s*)(?-i)(\\z)";
-    private static final String selectAsPattern = "(\\A)(?i)(\\s*)(select)(\\s+)((((\\s*)(\\w+)(\\s+)(as)(\\s+)(\\w+)(\\s*)[,](\\s*))*(\\s*)(\\w+)(\\s+)(as)(\\s+)(\\w+)(\\s+)))(from)(\\s+)(\\w+)(\\s*)(?-i)([;])?(\\s*)";
+    private static final String selectAsPattern ="(\\A)(?i)(\\s*)(select)(\\s+)((((\\s*)(\\w+)(\\s+)((as)(\\s+)(\\w+)(\\s*)[,](\\s*)))*?(\\s*)(\\w+)(\\s+)((as)(\\s+)(\\w+)(\\s+))?))(from)(\\s+)(\\w+)(\\s*)(?-i)([;])?(\\s*)";
     public int isValid(String query) {
         return selectIsValid(query);
     }
