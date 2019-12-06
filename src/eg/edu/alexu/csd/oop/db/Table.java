@@ -270,7 +270,7 @@ import javax.xml.parsers.ParserConfigurationException;
         if (doc != null) {
             NodeList columns = doc.getElementsByTagName("xs:attribute");
             for (int i = 0; i < columns.getLength(); i++) {
-                if (columns.item(i).getAttributes().getNamedItem("name").getNodeValue().toLowerCase().equals(columnName)) {
+                if (columns.item(i).getAttributes().getNamedItem("name").getNodeValue().equalsIgnoreCase(columnName)) {
                     return true;
                 }
             }
@@ -286,7 +286,7 @@ import javax.xml.parsers.ParserConfigurationException;
         if (doc != null) {
             NodeList columns = doc.getElementsByTagName("xs:attribute");
             for (int i = 0; i < columns.getLength(); i++) {
-                if (columns.item(i).getAttributes().getNamedItem("name").getNodeValue().equals(attrName)) {
+                if (columns.item(i).getAttributes().getNamedItem("name").getNodeValue().equalsIgnoreCase(attrName)) {
                     return columns.item(i).getAttributes().getNamedItem("type").getNodeValue().equals("xs:int");
                 }
             }
