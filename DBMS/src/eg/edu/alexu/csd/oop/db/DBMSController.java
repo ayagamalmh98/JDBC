@@ -27,7 +27,6 @@ public class DBMSController {
 	}
 
 	public String invoke(String query) throws SQLException {
-		query = query.toLowerCase();
 		int operation = validator.isValidQuery(query);
 		if (operation == 1 || operation == 2) {
 			boolean test = manager.executeStructureQuery(query);

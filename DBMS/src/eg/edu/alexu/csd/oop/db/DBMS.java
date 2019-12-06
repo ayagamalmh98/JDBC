@@ -101,7 +101,7 @@ public class DBMS implements Database {
         return false;
     }
     
-    DB getactiveDB() throws SQLException {	
+    DB getactiveDB()   {
     		return activeDB;
     }
 

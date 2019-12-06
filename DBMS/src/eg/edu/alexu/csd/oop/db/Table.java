@@ -246,11 +246,11 @@ import javax.xml.parsers.ParserConfigurationException;
         if (!isColumnInteger(carrier.conditionColumn) || !isInt(carrier.conditionValue)) {
             switch (carrier.conditionOperator) {
                 case '=':
-                    return row.getAttributes().getNamedItem(carrier.conditionColumn).getNodeValue().compareTo(carrier.conditionValue) == 0;
+                    return row.getAttributes().getNamedItem(carrier.conditionColumn).getNodeValue().toLowerCase().compareTo(carrier.conditionValue.toLowerCase()) == 0;
                 case '>':
-                    return row.getAttributes().getNamedItem(carrier.conditionColumn).getNodeValue().compareTo(carrier.conditionValue) > 0;
+                    return row.getAttributes().getNamedItem(carrier.conditionColumn).getNodeValue().toLowerCase().compareTo(carrier.conditionValue.toLowerCase()) > 0;
                 case '<':
-                    return row.getAttributes().getNamedItem(carrier.conditionColumn).getNodeValue().compareTo(carrier.conditionValue) < 0;
+                    return row.getAttributes().getNamedItem(carrier.conditionColumn).getNodeValue().toLowerCase().compareTo(carrier.conditionValue.toLowerCase()) < 0;
             }
         } else {
             switch (carrier.conditionOperator) {

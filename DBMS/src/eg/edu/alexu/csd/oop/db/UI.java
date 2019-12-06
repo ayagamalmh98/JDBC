@@ -3,7 +3,6 @@ package eg.edu.alexu.csd.oop.db;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-import eg.edu.alexu.csd.oop.db.DBMSController;
 
 public class UI {
 
