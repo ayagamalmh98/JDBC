@@ -16,7 +16,6 @@ public class StatementImp implements Statement {
 	private ConnectionImp connection;
 	private ResultSetImp resultSet;
 	private ArrayList<String> batches;
-	//see later
 	private Object[][] ProducedData;
 	private int time = 0;
 	private boolean isClose;
@@ -31,36 +30,29 @@ public class StatementImp implements Statement {
 	}
 
 	@Override
-	public void addBatch(String arg0)  {
+	public void addBatch(String arg0) {
 		try {
 			if (isClose) {
-
 				throw new SQLException("Statement is closed ..Can't do operations");
 			}
 			log.log.info("adding new Batch.");
 			batches.add(arg0);
-
 		} catch (Exception e) {
 			log.log.info("Error in adding Batch");
-
 		}
-
 	}
 
 	@Override
-	public void clearBatch()  {
+	public void clearBatch() {
 		try {
 			if (isClose) {
 				throw new SQLException("Statement is closed ..Can't do operations");
 			}
 			log.log.info("Empties list of SQL commands.");
 			batches.clear();
-
 		} catch (Exception e) {
 			log.log.info("Error in clearing Batch List");
-
 		}
-
 	}
 
 	@Override
@@ -78,7 +70,6 @@ public class StatementImp implements Statement {
 			throw new SQLException("Statement is closed ..Can't do operations");
 		}
 		log.log.info("Executing the given SQL statement");
-
 		if (arg0.trim().split("\\s+")[0].equalsIgnoreCase("create")
 				|| arg0.trim().split("\\s+")[0].equalsIgnoreCase("drop")) {
 			String s = executor.invoke(arg0);
@@ -91,14 +82,11 @@ public class StatementImp implements Statement {
 		} else if (arg0.trim().split("\\s+")[0].equalsIgnoreCase("select")) {
 			log.log.info("Generating result of select query..");
 			ResultSet result = executeQuery(arg0);
-			//see later
-			int k = result.getMetaData().getColumnCount();
 			return result.getMetaData().getColumnCount() > 0;
 		}
 		return false;
 	}
 
-	
 	@Override
 	public ResultSet executeQuery(String arg0) throws SQLException {
 		if (isClose) {
@@ -106,21 +94,10 @@ public class StatementImp implements Statement {
 			throw new SQLException("Statement is closed ..Can't do operations");
 		}
 		log.log.info("Executing the given SQL statement and returning ResultSet ");
-		Object[][] ProducedData = executor.invokee(arg0);
+		ProducedData = executor.invokee(arg0);
 		String tablename = executor.getTableName(arg0);
 		DataCarrier columnsinfo = executor.getColumnsInfo(arg0);
 		resultSet = new ResultSetImp(ProducedData, columnsinfo, tablename, this);
-		StringBuilder st = new StringBuilder();
-		for (Object[] obj :ProducedData) {
-			for (int j = 0; j < ProducedData[0].length; j++) {
-
-				
-					st.append(obj[j].toString()).append(" ");
-				
-			}
-			st.append("\n");
-		}
-		System.out.println(st.toString()); 
 		return resultSet;
 	}
 
@@ -148,11 +125,10 @@ public class StatementImp implements Statement {
 		int[] arr = new int[batches.size()];
 		for (int i = 0; i < batches.size(); i++) {
 			String query = batches.get(i);
-			//see later
+			// see later
 			String s = executor.invoke(query);
 			if (execute(query))
 				arr[i] = SUCCESS_NO_INFO;
-
 			else
 				arr[i] = executeUpdate(query);
 		}
@@ -166,7 +142,6 @@ public class StatementImp implements Statement {
 			throw new SQLException("Statement is closed ..Can't do operations");
 		}
 		log.log.info("getting the current query timeout limit ");
-
 		return time;
 	}
 
@@ -202,167 +177,167 @@ public class StatementImp implements Statement {
 	}
 
 	@Override
-	public int getUpdateCount()  {
+	public int getUpdateCount() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isWrapperFor(Class<?> iFace)  {
+	public boolean isWrapperFor(Class<?> iFace) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public <T> T unwrap(Class<T> iFace)  {
+	public <T> T unwrap(Class<T> iFace) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void cancel()  {
+	public void cancel() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void clearWarnings()  {
+	public void clearWarnings() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void closeOnCompletion()  {
+	public void closeOnCompletion() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean execute(String arg0, int arg1)  {
+	public boolean execute(String arg0, int arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean execute(String arg0, int[] arg1)  {
+	public boolean execute(String arg0, int[] arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean execute(String arg0, String[] arg1)  {
+	public boolean execute(String arg0, String[] arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int executeUpdate(String arg0, int arg1)  {
+	public int executeUpdate(String arg0, int arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int executeUpdate(String arg0, int[] arg1)  {
+	public int executeUpdate(String arg0, int[] arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int executeUpdate(String arg0, String[] arg1)  {
+	public int executeUpdate(String arg0, String[] arg1) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getFetchDirection()  {
+	public int getFetchDirection() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getFetchSize()  {
+	public int getFetchSize() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ResultSet getGeneratedKeys()  {
+	public ResultSet getGeneratedKeys() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getMaxFieldSize()  {
+	public int getMaxFieldSize() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getMaxRows()  {
+	public int getMaxRows() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean getMoreResults()  {
+	public boolean getMoreResults() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean getMoreResults(int arg0)  {
+	public boolean getMoreResults(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getResultSetConcurrency()  {
+	public int getResultSetConcurrency() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getResultSetHoldability()  {
+	public int getResultSetHoldability() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int getResultSetType()  {
+	public int getResultSetType() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SQLWarning getWarnings()  {
+	public SQLWarning getWarnings() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isCloseOnCompletion()  {
+	public boolean isCloseOnCompletion() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isClosed()  {
+	public boolean isClosed() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isPoolable()  {
+	public boolean isPoolable() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setCursorName(String arg0)  {
+	public void setCursorName(String arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setEscapeProcessing(boolean arg0)  {
+	public void setEscapeProcessing(boolean arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setFetchDirection(int arg0)  {
+	public void setFetchDirection(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setFetchSize(int arg0)  {
+	public void setFetchSize(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setMaxFieldSize(int arg0)  {
+	public void setMaxFieldSize(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setMaxRows(int arg0)  {
+	public void setMaxRows(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setPoolable(boolean arg0)  {
+	public void setPoolable(boolean arg0) {
 		throw new UnsupportedOperationException();
 	}
 
