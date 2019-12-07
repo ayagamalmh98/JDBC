@@ -46,7 +46,16 @@ public class Ui {
 					int op = statement.executeUpdate(query);
 					System.out.println(op + " row has been changed");
 				} else if (query0.equalsIgnoreCase("select")) {
-					statement.executeQuery(query);
+					ResultSet rs= statement.executeQuery(query);
+					int CC=rs.getMetaData().getColumnCount();
+					StringBuilder st = new StringBuilder();
+					while(rs.next()) {
+						for (int i=1;i<=CC;i++) {
+						st.append(rs.getObject(i)).append(" ");
+						}
+						st.append("\n");
+					
+					} System.out.println(st);
 				} else {
 					System.out.println("Wrong Query");
 				}
